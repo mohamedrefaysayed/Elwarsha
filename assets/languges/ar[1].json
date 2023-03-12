@@ -1,0 +1,252 @@
+{
+  "name": "الاسم",
+  "email": "البريد الإلكتروني",
+  "pass": "كلمة السر",
+  "pho": "رقم الهاتف",
+  "gender": "الحنس",
+  "male": "ذكر",
+  "female": "انثي",
+  "type_here": "أكتب هنا",
+  "gender_hnt": "اختيار الحنس.",
+  "gender_vald": "برجاء اختيار الجنس.",
+   "the next"   :   " التالي",
+   "the workshop" :  " الورشه",
+   "let‘s Begin": " لنبدأ",
+     "ltinerary" :   "  خط السير",
+   "12KM":"12 كيلو متر",
+ "repairman profile":" للمصلح الملف الشخصي ",
+  "Ibrahim El Demerdash":"ابراهيم الدمرداش",
+  "repairer_name": "اسم المصلح",
+  "25 second":"25 ثانيه ",
+  "workshop name":"اسم الوارشه" ,
+  " Comments":"التعليقات",
+  "good job":"عمل رائع",
+  "Hassan Pasha":"حسن باشا" ,
+  "Quick to install":"سريع التركيب" ,
+  "Ashraf Al Kuwaiti": "اشرف الكويتي" ,
+  "Reformer data":"بيانات المصلح" ,
+  "Unit price":"سعر القطعه" ,
+  "Add another car":"اضافة سياره اخرى" ,
+  "No":"لا",
+  "Yes":"نعم",
+  "Abo Yousef":"ابو يوسف",
+  "The application is characterized by the feature of searching through the camera and knowing the itinerary of the workshop to it.":"يتميز التطبيق بخاصية البحث من خلال الكاميرا ومعرفة خط سير الوارشه إليه",
+  "It provides you with a service to know the cost of repairs before ordering, and offers and discounts available on auto spare parts for workshops.":"توفرلك خدمة معرفة تكلفة التصليح قبل الطلب والعرض والخصومات المتاحه على قطع غيار السيارات الخاصه بالورش",
+  "The workshop is an application that helps you to request a mobile workshop that will help you solve the problem of your car's breakdowns":"الوارشه تطبيق يساعدك على طلب ورشه متنقله تسعدك على حل مشكلة اعطال سيارتك ",
+  "He made 15 repairs, followed up with the application.":"قام ب 15 عملية تصليح تابعه مع التطبيق",
+  "He maintained my car well.":"قام بصيانة سيارتي بطريقه جيده",
+  "200 pounds":"200 جنيه ",
+"100 pounds":"100 جنيه",
+"300 pounds" :"300 جنيه",
+"Reformer data" :"بيانات المصلح",
+"Workshops Available" : " الورش المتاحه",
+" Abu Ali ":" ابو علي ",
+"Karali":"قرعلي",
+"composition" :"التركيب",
+"The total amount" :"المبلغ الكلي",
+"OK" :"موافق",
+"the Hoash": "الحواش",
+"expert":"الخبير",
+"Repair Request":"طلب التصليح",
+"Afshah":"عفشه",
+"electricity":"كهرباء",
+"car tire":"كوتش",
+"mechanical faults" :"اعطال ميكانيكيه",
+"I don't know" :"لا ادري",
+"other":"اخر",
+"Do you want a specific workshop?":"هل تريد ورشه محدده",
+"search":"البحث",
+
+
+
+  "price": "السعر",
+  "rooms": "الغرف",
+  "no_pics": "لم يتم ايجاد صور.",
+  "tap_again_exit": "اضفط مره اخري للمغادرة.",
+  "error_String_not_sent": "خطأ: لم يتم إرسال نص",
+  "samsarly": "سمسرلي",
+  "tokens": "العملات",
+  "watch_ads": "شاهد إعلان",
+  "invite": "ادعو اصدقائك",
+  "subscribe": "اشترك",
+
+
+  "about": "معلومات عنا",
+  "contact_us": "تواصل معنا هنا:",
+
+
+  "acc_Settings": "اعدادات الحساب",
+  "change_email": "تغير البريد الالكتروني",
+  "change_pass": "تغير كلمة السر",
+  "change_pho": "تغير رقم الهاتف",
+  "id_support": "دعم بطاقة الهوية",
+
+  "recovery": "الاستعادة",
+  "enter_email": "أدخل بريدك الالكتروني.",
+
+  "code_sent_msg": "تم ارسال رقم سري إلي بريدك الإلكتروني.",
+  "submit_button": "ارسل",
+  "new_String": "ادخل ",
+  "confirm": "تأكيد ",
+
+
+  "home": "الصفحة الرئيسية",
+  "apartment": "الشقة:",
+  "reveal_pho": "اكشف رقم الهاتف",
+  "loading": "تحميل",
+
+  "my_properties": "ممتلكاتي",
+  "apartment_id:": "معرف الشقة: ",
+
+  "my_property": "ملكيتي",
+  "edit_property": "غير هذه الملكية",
+
+
+  "add_apart": "إضافة شقة",
+  "pics_button": "الصور",
+  "location_button": "الموقع",
+  "Add_button": "إضافة",
+
+
+  "notifications": "الإشعارات",
+
+
+  "profile": "حسابك",
+  "your_id": "بطاقة الهوية",
+
+
+  "settings": "الإعدادات",
+  "light_mode": "الوضع المضيئ",
+  "dark_mode": "الوضع الليلي",
+  "preferred_lan": "اللغة المفضلة",
+  "select_lan_hint": "اختار اللغة.",
+  "lan_vald": "برجاء اختيار اللغة.",
+
+
+  "sign_in": "سجل الدخول",
+  "remember_me": "تذكرني",
+ 
+  "id": "بطاقة الهوية",
+
+  "no_pics_added": "لم يتم إضافة أي صور.",
+
+  
+
+
+
+
+
+
+
+  "Let's talk about ourselves more":"هيا نتحدث عن نفسنا أكثر ",
+  "In this project":"فى هذا المشروع",
+  "Graduation project team members" : "Graduation project team members",
+  "Flutter developers": "مطوري Flutter" ,
+  "UI/UX designer": "مصمم UI / UX",
+  "Front-end developers": "مطورو الواجهة الأمامية",
+  "Back-end developers": "مطورو الواجهة الخلفية",
+
+  "A native":"أصلى",
+  "Chinese":"صينى",
+  "Offers and discounts":"عروض وخصومات",
+  "used": "مستعمل",
+
+  "my favourites": "مفضلاتى",
+
+ "Workshop profile": "الملف الشخصى للورشة",
+ "We have more than one branch specialized in maintenance in Tariq Ismailia, Cairo Desert, are available at all times":"نمتلك أكثر من فرع متخصصين فى لصيانة فى طريق  إسماعيلية القاهرة الصحراوى متوافرين فى جميع الاوقات" ,
+ "Our services are available 24 hours, especially at night.":"خدماتنا متوافرة24ساعة وخاصة فى ليل",
+ "details":"تفاصيل",
+ "comments": "التعليقات ",
+ "Their work is great":"عملهم رائع",
+ "They are quick to access":"يتميزون بسرعة الوصول",
+ "They have maintained my car well": "قاموا بصيانة سيارتى بطريقة جيدة",
+
+ "Are you sure you want to log out?":"هل أنت متأكد أنك تريد تسجيل الخروج",
+ "Are you sure you want to edit the profile?":"هل أنت متأكد أنك تريد تعديل الملف الشخصى ؟",
+ "Are you sure you want to lock notifications?":"هل أنت متأكد أنك تريد قفل التنبيهات ؟",
+ "to retreat":"تراجع",
+
+ "Profile personly":"الملف الشخصى",
+ "my car":"سيارتى",
+ "Alerts":"تنبيهات",
+ "Modify profile":"تعديل الملف الشخصى",
+ "Information on the application":"معلومات على التطبيق",
+ "sign out":"تسجيل الخروج",
+ "Order history":"سجل الطلبات",
+
+ "Workshop name":"اسم الورشة",
+ "Demerdash":"الدمرداش",
+ "the address":"العنوان",
+ "اسم صاحب الورشة":"اسم صاحب الورشة",
+ "license number":"رقم الترخيص",
+ "the description":"الوصف",
+ "industrial addition":"إضافة صنايعية",
+ "save":"حفظ",
+
+ "car mechanic":"ميكانيكى سيارات",
+ "Car electrics":"كهربية سيارات",
+ "addition":"إضافة",
+
+  "The password is incorrect":"كلمة السر غير صحيح",
+  "forgot_password": "نسيت كلمة السر؟",
+
+
+  "code_tff": "الرقم السري",
+  "don't_have_acc ":" تمتلك حساب لا",
+  "register": "سجل حساب جديد",
+  "email":"الايميل",
+
+ "Create an account":"إنشاء حساب",
+ "First Name":"الاسم الاول",
+ "the second name":"الاسم التانى ",
+ "password confirmation":"تأكيد كلمة السر",
+
+ "car owner":"صاحب سيارة",
+ "Car market":"ماركت السيارة",
+ "Mercedes B200":"مرسيدس B 200",
+ "General model":"موديل عام ",
+ "1300 cc":"1300 سي سي",
+ "hatchback":"هاتشباك",
+ "belonging to the agency":"تابعة للتوكيل",
+ "Branch name":"اسم الفرع",
+ "Branch address":"عنوان الفرع",
+ "phone":"رقم التليفون",
+
+ "another car":"سيارة أخرى",
+
+ "repairman profile":"الملف الشخصى للمصلح",
+ "Specialized in transport vehicles":"متخصص فى عربيات النقل",
+ "He did 15 repairs with the app":"قام ب15عملية تصليح تابعة مع للتطبيق",
+ "add":"إضافة",
+ "remove":"إزالة",
+ "طلبات التصليح":"طلبات التصليح",
+ "Afsha problem":"مشكلة عفشة ",
+ "120 km away":"على بعد 120 كيلومتر",
+
+ "payment method":"طريقة الدفع",
+ "Credit card":"بطاقة الإئتمان",
+ "Vodafone Cash":"فودافون كاش",
+ "فورى":"فورى",
+ "your bills":"فواتيرك",
+ "credit card numbers":"أرقام بطاقة الإئتمان",
+ "today's date":"تاريخ اليوم",
+ "The name written on the credit card":"الإسم المكتوب ببطاقة الإئتمان",
+
+ // "Spare parts": "قطع الغيار" ,
+ // "filters":"فلاتر",
+
+/*"A set of rear assistants, Sachs":"طقم مساعدين خلفى ساكس",
+  "installation" :"التركيب",
+  "-2% discount": "-2%خصم",
+  "Delivery for 21 pounds, February 8-9.":"توصيل بـ21جنيه فبراير 8 - 9.",
+  "Brand: Oats Basf":"العلامة التجارية: اوتس باسف",
+  "608 reviews":"608 تقييم",
+  "Colour: black gold frame":"اللون : إطار ذهبي أسود",
+  "Compatible Devices: Automatic autoclose model bc-g1 ":" الأجهزة المتوافقة: اوتوشلوسيل تلقائي الموديلBc-g1",
+  "Add to my favourites":"إضافة إلى المفضلاتى", */
+
+
+
+
+}

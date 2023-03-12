@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fb_login_protocol_scheme">fbb663df9aa8d2825b3fb8761f3b7bfbad</string>
+    <string name="facebook_client_token">56789</string>
+    <string name="facebook_app_id">773308094140519</string>
+    <string name="app_name">Elwarsha</string>
+</resources>
