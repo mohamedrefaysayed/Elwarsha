@@ -13,7 +13,7 @@ class ConfirmMailCubit extends Cubit<ConfirmMailState> {
   Future<void> Reset_password({required email}) async {
     try {
       emit(ConfirmMailLoading());
-      await fauth.sendPasswordResetEmail(email: email.text);
+      await fauth.sendPasswordResetEmail(email: email);
         emit(ConfirmMailSuccess());
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {

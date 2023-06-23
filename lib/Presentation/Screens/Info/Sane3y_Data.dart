@@ -5,7 +5,6 @@ import '../../../../Constents/fontsize.dart';
 import '../../../../Helper/MyApplication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class Sane3yData extends StatelessWidget {
   const Sane3yData({Key? key}) : super(key: key);
@@ -55,13 +54,13 @@ class Sane3yData extends StatelessWidget {
                     myApplication.showToast(
                         text: "تم النسخ", color: Colors.white);
                   },
-                  child: QrImage(
-                    data: "رقم الهاتف : 01090287571 \n الاسم : ابو حموده"
-                        "",
-                    version: QrVersions.auto,
-                    size: 180.0,
-                    backgroundColor: Colors.white,
-                  ),
+                  // child: QrImage(
+                  //   data: "رقم الهاتف : 01090287571 \n الاسم : ابو حموده"
+                  //       "",
+                  //   version: QrVersions.auto,
+                  //   size: 180.0,
+                  //   backgroundColor: Colors.white,
+                  // ),
                 ),
                 const SizedBox(
                   height: 100,

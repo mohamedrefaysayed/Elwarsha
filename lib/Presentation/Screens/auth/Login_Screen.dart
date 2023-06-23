@@ -38,7 +38,11 @@ class LoginScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
+
+        backgroundColor: mycolors.first_color,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           elevation: 0.0,
           backgroundColor: mycolors.first_color,
           title:  Text(
@@ -55,13 +59,10 @@ class LoginScreen extends StatelessWidget {
           onWillPop: () => myApplication.onWillPop(context),
           child: BlocConsumer<LoginCubit, LoginState>(
             listener: (context, state) {
-              if (state is LoginLoading) {
-                load = true;
-              } else if (state is LoginSuccess) {
+               if (state is LoginSuccess) {
                 showTopSnackBar(Overlay.of(context),
                     MySnackBar.success(message: "تم تسجيل الدخول بنجاح"));
-                load = false;
-                myApplication.navigateToRemove(context, const MainScreen());
+                myApplication.navigateToRemove(context, MainScreen());
               } else if (state is LoginFailure) {
                 showTopSnackBar(Overlay.of(context),
                     MySnackBar.error(message: state.errormessage));
@@ -69,6 +70,12 @@ class LoginScreen extends StatelessWidget {
               }
             },
             builder: (context, state) {
+              if(state is LoginLoading){
+                return Center(
+                  child: myApplication.myloading(context),
+                );
+              }
+              else{
                 return Form(
                   key: formkey,
                   child: Container(
@@ -82,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                                   height: myApplication.hightClc(100, context),
                                   child: Image.asset("assets/images/الورشة.png",color: mycolors.popColor,)),
                               SizedBox(
-                                height: myApplication.hightClc(95, context),
+                                  height: myApplication.hightClc(95, context),
                                   child: Image.asset("assets/images/الورشة.png",color: mycolors.secod_color,)),
                             ],
                           ),
@@ -93,14 +100,14 @@ class LoginScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                               Text(
+                              Text(
                                 'الإيميل',
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
                                     fontSize: myfonts.mediumfont, fontWeight: FontWeight.bold),
                               ),
-                               SizedBox(
-                                 height: myApplication.hightClc(10, context),
+                              SizedBox(
+                                height: myApplication.hightClc(10, context),
                               ),
                               SizedBox(
                                 height: myApplication.hightClc(84, context),
@@ -128,16 +135,16 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                               SizedBox(
+                              SizedBox(
                                 height: myApplication.hightClc(20, context),
                               ),
-                               Text(
+                              Text(
                                 'الرقم السرى',
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
                                     fontSize: myfonts.mediumfont, fontWeight: FontWeight.bold),
                               ),
-                               SizedBox(
+                              SizedBox(
                                 height: myApplication.hightClc(10, context),
                               ),
                               SizedBox(
@@ -145,7 +152,7 @@ class LoginScreen extends StatelessWidget {
                                 child: BlocConsumer<PassOpCubit, PassOpState>(
                                   listener: (context, state) {
                                   },
-                                    builder: (context, state) => TextFormField(
+                                  builder: (context, state) => TextFormField(
                                     controller: password,
                                     textAlign: TextAlign.end,
                                     obscureText: PassOpCubit.passwordVisible,
@@ -185,8 +192,8 @@ class LoginScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                         SizedBox(
-                           height: myApplication.hightClc(10, context),
+                        SizedBox(
+                          height: myApplication.hightClc(10, context),
                         ),
                         Container(
                           margin: const EdgeInsets.only(right: 24),
@@ -208,8 +215,8 @@ class LoginScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                         SizedBox(
-                           height: myApplication.hightClc(30, context),
+                        SizedBox(
+                          height: myApplication.hightClc(60, context),
                         ),
                         SizedBox(
                           height: myApplication.hightClc(20, context),
@@ -220,10 +227,10 @@ class LoginScreen extends StatelessWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white),
-                            onPressed: () {
+                            onPressed: () async{
                               myApplication.keyboardFocus(context);
                               if (formkey.currentState!.validate()) {
-                                BlocProvider.of<LoginCubit>(context).LoginUser(
+                                await BlocProvider.of<LoginCubit>(context).LoginUser(
                                     email: email.text.trim(),
                                     password: password.text.trim());
                                 // signInWithEmail();
@@ -239,8 +246,38 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
 
+                        SizedBox(height: myApplication.hightClc(20, context),),
+                        Center(child: Text("أو",style: TextStyle(fontSize: myfonts.smallfont,fontWeight: FontWeight.bold),)),
+                        Center(child: Text("يمكنك الدخول ب",style: TextStyle(fontSize: myfonts.smallfont,fontWeight: FontWeight.bold),)),
+                        SizedBox(height: myApplication.hightClc(20, context),),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              child: Image.asset("assets/images/Icons/facebook.png",
+                                height: myApplication.hightClc(40, context),
+                              ),
+                              onTap: () async {
+                                await BlocProvider.of<LoginCubit>(context).LoginFacebookUser(context);
+                              },
+                            ),
+                            SizedBox(width: myApplication.widthClc(50, context),),
+                            InkWell(
+                              child: Image.asset("assets/images/Icons/google.png",
+                                height: myApplication.hightClc(40, context),
+                              ),
+                              onTap: () async {
+                                await BlocProvider.of<LoginCubit>(context).LoginGoogelUser(context);
+                              },
+                            ),
+
+
+                          ],
+                        ),
+
                         SizedBox(
-                           height: myApplication.hightClc(10, context),
+                          height: myApplication.hightClc(20, context),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -269,40 +306,11 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: myApplication.hightClc(20, context),),
-                        Center(child: Text("أو",style: TextStyle(fontSize: myfonts.smallfont,fontWeight: FontWeight.bold),)),
-                        Center(child: Text("يمكنك التسجيل ب",style: TextStyle(fontSize: myfonts.smallfont,fontWeight: FontWeight.bold),)),
-                        SizedBox(height: myApplication.hightClc(20, context),),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              child: Image.asset("assets/images/Icons/facebook.png",
-                                height: myApplication.hightClc(40, context),
-                              ),
-                              onTap: () async {
-                                BlocProvider.of<LoginCubit>(context).LoginFacebookUser();
-                              },
-                            ),
-                            SizedBox(width: myApplication.widthClc(40, context),),
-                            InkWell(
-                              child: Image.asset("assets/images/Icons/google.png",
-                                height: myApplication.hightClc(40, context),
-                              ),
-                              onTap: () async {
-                                BlocProvider.of<LoginCubit>(context).LoginGoogelUser();
-                              },
-                            ),
-
-
-                          ],
-                        ),
-
                       ],
                     ),
                   ),
-              );
+                );
+              }
             },
           ),
         ),

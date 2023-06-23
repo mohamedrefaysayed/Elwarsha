@@ -14,7 +14,6 @@ class ResetPasswordCubit extends Cubit<ResetPassowrdState> {
     cantsend = true;
     try {
       await fauth.sendPasswordResetEmail(email: email);
-      myApplication.showToast(text: "تم الارسال", color: Colors.white);
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
         emit(ResetPasswordFailure(errormessage: "هذا الايميل غير موجود"));
@@ -25,6 +24,21 @@ class ResetPasswordCubit extends Cubit<ResetPassowrdState> {
       }
     }
   }
+  Future<void> change_email({required email}) async {
+    cantsend = true;
+    try {
+      await fauth.currentUser!.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        emit(ResetPasswordFailure(errormessage: "هذا الايميل غير موجود"));
+      } else if (e.code == "too-many-requests") {
+        emit(ResetPasswordFailure(errormessage: "أعد المحاولة بعد دقائق"));
+      } else {
+        emit(ResetPasswordFailure(errormessage: 'حدث خطأ'));
+      }
+    }
+  }
+
   void cansend(){
     cantsend = false;
     emit(ResetPasswordInitial());

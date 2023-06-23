@@ -7,7 +7,6 @@ import '../../../../Helper/MyApplication.dart';
 import '../../../../global/global.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'agency.dart';
 
 // ignore: constant_identifier_names
 const List<String> Cars = <String>[" ", 'مرسيدس', 'bmw', 'هيونداى', 'هوندا'];
@@ -496,11 +495,6 @@ class _CustomCarInfoState extends State<CustomCarInfo> {
                       onPressed: () {
                         if (agency == "y") {
                           saveCarInfo();
-                          myApplication.push_up(
-                              context,
-                              agency_ditails(
-                                iscustom: true,
-                              ));
                         } else {
                           isinrequestmode = true;
                           myApplication.navigateToRemove(context, const MainScreen());

@@ -1,7 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:elwarsha/Helper/chach_helper.dart';
+import 'package:elwarsha/Presentation/Screens/Info/Elwarsha_Info.dart';
+import 'package:elwarsha/business_logic/Cubits/elwarsha_Info/elwarsha_info_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:elwarsha/global/global.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
@@ -13,12 +18,25 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
 
 
-  Future<void>LoginUser({required email ,required password}) async {
+  Future<void>LoginUser({required email ,required password,context}) async {
         try {
           emit(LoginLoading());
           await  FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email, password: password);
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString("userKey", fauth.currentUser!.uid);
+            await CahchHelper.saveData(key: "signedIn", value: true);
+            await CahchHelper.saveData(key: "signMethod",value: "normal");
+
+            userKey = fauth.currentUser!.uid;
+            await BlocProvider.of<GetInfoCubit>(context).getInfo();
+            print(GetInfoCubit.Info);
+            await CahchHelper.saveData(key: "role", value: GetInfoCubit.Info!["role"]);
+
+            role = GetInfoCubit.Info!["role"];
+
           emit(LoginSuccess());
+
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {
             emit(LoginFailure(errormessage: 'لايوجد مستخدم لهذا الايميل'));
@@ -26,49 +44,81 @@ class LoginCubit extends Cubit<LoginState> {
             emit(LoginFailure(errormessage: 'الرقم السرى غير صحيح'));
           }
         }catch(e){
-          emit(LoginFailure(errormessage: 'حدث خطأ'));
-
+          emit(LoginFailure(errormessage: e.toString()));
+          print(e.toString());
         }
   }
-  Future<void>LoginGoogelUser() async {
-
+  Future<void>LoginGoogelUser(context) async {
     try {
       emit(LoginLoading());
-      await GoogleSignIn().signIn().then((value) async {
-        GoogleUser = value;
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString("userKey", GoogleUser!.id);
-        ffire.collection("customers").doc(userKey as String?).set({
-          "fristname": GoogleUser!.displayName,
-          "secondname": "",
-          "email": GoogleUser!.email,
-          "url":GoogleUser!.photoUrl,
-        });
-      });
-      emit(LoginSuccess());
-    }catch(e){
+      GoogleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth = await GoogleUser!.authentication;
+      if(googleAuth!.accessToken != null && googleAuth.idToken != null){
+        final Credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        final isSignedUp = await fauth.fetchSignInMethodsForEmail(GoogleUser!.email);
+
+        if(isSignedUp.isNotEmpty){
+          UserCredential userCredential = await fauth.signInWithCredential(Credential);
+          if (userCredential.user != null) {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString("userKey", GoogleUser!.id);
+            await CahchHelper.saveData(key: "signedIn", value: true);
+            await CahchHelper.saveData(key: "signMethod",value: "");
+
+            userKey = GoogleUser!.id;
+            await BlocProvider.of<GetInfoCubit>(context).getInfo();
+            await CahchHelper.saveData(key: "role", value: GetInfoCubit.Info!["role"]);
+
+            role = GetInfoCubit.Info!["role"];
+
+            emit(LoginSuccess());
+          }
+        }else{
+          await GoogleSignIn().signOut();
+          emit(LoginFailure(errormessage: "هذا الايميل غير مسجل من قبل"));
+        }
+
+
+      }
+    }on FirebaseException catch(e){
       emit(LoginFailure(errormessage: "حدث خطأ"));
     }
   }
-  Future<void>LoginFacebookUser() async {
+  Future<void>LoginFacebookUser(context) async {
     try {
-      await FacebookAuth.instance.login();
-        FacebookUser = await FacebookAuth.instance.getUserData();
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
+      FacebookUser = await FacebookAuth.instance.getUserData();
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString("userKey", FacebookUser!["id"]);
+      final isSignedUp = await fauth.fetchSignInMethodsForEmail(FacebookUser!["email"]);
 
-      ffire.collection("customers").doc(userKey as String?).set({
-        "fristname": FacebookUser!["name"],
-        "secondname": "",
-        "email": FacebookUser!["email"],
-        "url":FacebookUser!["picture"]["data"]["url"],
-      });
-      emit(LoginSuccess());
+      if(isSignedUp.isNotEmpty){
+        await fauth.signInWithCredential(facebookAuthCredential);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString("userKey", FacebookUser!["id"]);
+        await CahchHelper.saveData(key: "signedIn", value: true);
+        await CahchHelper.saveData(key: "signMethod",value: "");
+
+        userKey = FacebookUser!["id"];
+        await BlocProvider.of<GetInfoCubit>(context).getInfo();
+        await CahchHelper.saveData(key: "role", value: GetInfoCubit.Info!["role"]);
+
+        role = GetInfoCubit.Info!["role"];
+
+        emit(LoginSuccess());
+
+      }else{
+        await FacebookAuth.instance.logOut();
+        emit(LoginFailure(errormessage: "هذا الايميل غير مسجل من قبل"));
+      }
+
     }catch(e){
       emit(LoginFailure(errormessage: "حدث خطأ"));
     }
   }
-
 
 }

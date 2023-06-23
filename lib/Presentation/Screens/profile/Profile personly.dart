@@ -1,10 +1,13 @@
+import 'dart:io';
+
+import 'package:elwarsha/Helper/chach_helper.dart';
+import 'package:elwarsha/Presentation/Screens/Info/Elwarsha_Info.dart';
+import 'package:elwarsha/Presentation/Screens/Splash_Screens/splash.dart';
 import 'package:elwarsha/Presentation/Screens/profile/edit_Profile.dart';
 import 'package:elwarsha/business_logic/Cubits/Notification_Button/notify_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../../Constents/colors.dart';
 import '../../../../Constents/fontsize.dart';
@@ -14,7 +17,8 @@ import '../../../../global/global.dart';
 import '../../../Helper/MY_SnackBar.dart';
 import '../../Team_Info.dart';
 import '../Info/Car_Info.dart';
-import '../auth/Login_Screen.dart';
+
+String? stordimagePath;
 
 // ignore: camel_case_types
 class person_file extends StatefulWidget {
@@ -24,20 +28,20 @@ class person_file extends StatefulWidget {
   State<person_file> createState() => _person_fileState();
 }
 
-class _person_fileState extends State<person_file> {
+class _person_fileState extends State<person_file> with AutomaticKeepAliveClientMixin<person_file>{
 
   Map<String, dynamic>? Info ;
 
-
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    BlocProvider.of<GetInfoCubit>(context).getInfo();
+      BlocProvider.of<GetInfoCubit>(context).getInfo();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: mycolors.first_color,
         appBar: AppBar(
           centerTitle: true,
           elevation: 0.0,
@@ -45,15 +49,17 @@ class _person_fileState extends State<person_file> {
           title: Text("الملف الشخصي ",
               style: TextStyle(
                   fontSize: myfonts.largfont,
-                  color: Colors.black,
+                  color: mycolors.titleFont,
                   fontWeight: FontWeight.bold)),
         ),
         body: RefreshIndicator(
           color: mycolors.secod_color ,
           backgroundColor: mycolors.secod_color.withOpacity(0),
           onRefresh: ()async{
-            await BlocProvider.of<GetInfoCubit>(context).Loading();
-            await BlocProvider.of<GetInfoCubit>(context).getInfo();
+            if(await myApplication.checkInternet()==true) {
+              await BlocProvider.of<GetInfoCubit>(context).Loading();
+              await BlocProvider.of<GetInfoCubit>(context).getInfo();
+            }
           },
           child: Container(
             color: mycolors.first_color,
@@ -62,11 +68,28 @@ class _person_fileState extends State<person_file> {
                 builder: (context, state) {
                   if (state is GetInfoLoading) {
                     return Container(
-                      height: myApplication.hightClc(250, context),
-                      child: Center(
-                        child: myApplication.myloading(context),
-                      ),
-                    );
+                        padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: myApplication.widthClc(50, context),
+                            vertical: myApplication.widthClc(25, context)),
+                        height: myApplication.hightClc(250, context),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: myApplication.widthClc(60, context),
+                                backgroundColor: Colors.grey.withOpacity(0.5),
+                              ),
+                              SizedBox(height: 30,),
+                              Container(
+                                height: 30,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey.withOpacity(0.5),
+                                ),
+                              ),
+                            ]
+                        ));
                   } else if (state is GetInfoSucsses) {
                     return Container(
                         padding: EdgeInsetsDirectional.symmetric(
@@ -79,29 +102,78 @@ class _person_fileState extends State<person_file> {
                               GestureDetector(
                                 onTap: (){
                                   myApplication.zoomoutImageialog(context);},
-                                child: CircleAvatar(
-                                  radius: myApplication.widthClc(60, context),
-                                  backgroundColor: Colors.transparent,
-                                  child: SizedBox(
-                                      width: myApplication.widthClc(125, context),
-                                      height: myApplication.hightClc(125, context),
-                                      child: ClipOval(
-                                        child: Image.network(
-                                            GetInfoCubit.Info!['url']),
-                                      )),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: mycolors.secod_color,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: myApplication.widthClc(60, context),
+                                    backgroundColor: Colors.grey.withOpacity(0.5),
+                                    child: SizedBox(
+                                        width: myApplication.widthClc(125, context),
+                                        height: myApplication.hightClc(125, context),
+                                        child: Hero(
+                                          tag: "profilePic",
+                                          child: ClipOval(
+                                            child: stordimagePath != null
+                                            ? FittedBox(
+                                              fit: BoxFit.cover,
+                                              child: Image.file(
+                                                File(stordimagePath!),
+                                              ),
+                                            )
+                                            : (GetInfoCubit.Info!['url'] != null
+                                            ? FittedBox(
+                                              fit: BoxFit.cover,
+                                              child: Image.network(
+                                                GetInfoCubit.Info!['url'],
+                                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                  return Icon(Icons.person,color: mycolors.secod_color,size: myApplication.widthClc(100, context),);
+                                                },
+                                              ),
+                                            )
+                                            : Icon(Icons.person,color: mycolors.secod_color,size: myApplication.widthClc(100, context),))
+
+
+
+
+
+
+                                        ),
+                                        )),
+                                  ),
                                 ),
                               ),
                               SizedBox(
-                                height: myApplication.hightClc(10, context),
+                                height: myApplication.hightClc(25, context),
                               ),
-                              Text(GetInfoCubit.Info!['fristname'],
-                                  style: TextStyle(
-                                      fontSize: myfonts.mediumfont,
-                                      fontWeight: FontWeight.bold)),
-                              Text(GetInfoCubit.Info!['email'],
-                                  style: TextStyle(
-                                      fontSize: myfonts.mediumfont,
-                                      fontWeight: FontWeight.bold))
+                              ShaderMask(
+                                shaderCallback: (Rect bounds) {
+                                  return LinearGradient(
+                                    colors: [mycolors.secod_color, mycolors.secod_color],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    tileMode: TileMode.clamp,
+                                  ).createShader(bounds);
+                                },
+                                child: Text(
+                                    GetInfoCubit.Info!['name'],
+                                    style: TextStyle(
+                                      fontSize: myfonts.largfont,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    )),
+                              ),
+
+
+                              // Text(GetInfoCubit.Info!['email'],
+                              //     style: TextStyle(
+                              //         fontSize: myfonts.mediumfont,
+                              //         fontWeight: FontWeight.bold,color: mycolors.fontColor,))
                             ]));
                   } else {
                     return Center(
@@ -119,24 +191,28 @@ class _person_fileState extends State<person_file> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text("سيارتي",
+                            Text(
+                                role == "سائق سيارة" ? "سيارتي" : "الورشة",
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: mycolors.fontColor,
                                     fontSize: myfonts.smallfont)),
                             SizedBox(
                               width: myApplication.widthClc(50, context),
                             ),
                             Icon(
-                              myicons.directions_car,
+                              role == "سائق سيارة" ?  myicons.directions_car : Icons.home_work_sharp,
+
                               color: mycolors.secod_color,
                               size: myApplication.widthClc(25, context),
                             )
                           ]),
                       onTap: () {
-                        myApplication.mydialog(
+                        myApplication.myConfirmationdialog(
                             context,
-                            "هل تريد تغيير بيانات سياراتك ؟",
-                            () => myApplication.push_up(context,CarInfo(isregerster: false,)));
+                            role == "سائق سيارة" ? "هل تريد تغيير بيانات سياراتك ؟" : "هل تريد تغيير بيانات ورشتك ؟",
+                            () => role == "سائق سيارة" ? myApplication.push_up(context,CarInfo(isregerster: false,))
+                                : myApplication.push_up(context, elwarshaInfo(isregerster: false,)),
+                        );
                       },
                     ),
                     SizedBox(
@@ -153,7 +229,7 @@ class _person_fileState extends State<person_file> {
                               inactiveTrackColor: Colors.black,
                               onChanged: (val) {
                                 BlocProvider.of<NotifyCubit>(context).setnotify();
-                                val
+                                !val
                                     ? showTopSnackBar(
                                         Overlay.of(context),
                                         MySnackBar.success(
@@ -170,7 +246,7 @@ class _person_fileState extends State<person_file> {
                       ),
                       Text("التنبيهات",
                           style: TextStyle(
-                              color: Colors.black, fontSize: myfonts.smallfont)),
+                              color: mycolors.fontColor, fontSize: myfonts.smallfont)),
                       SizedBox(
                         width: myApplication.widthClc(50, context),
                       ),
@@ -190,7 +266,7 @@ class _person_fileState extends State<person_file> {
                             children: [
                               Text("سجل الطلبات",
                                   style: TextStyle(
-                                      color: Colors.black,
+                                      color: mycolors.fontColor,
                                       fontSize: myfonts.smallfont)),
                               SizedBox(
                                 width: myApplication.widthClc(50, context),
@@ -204,18 +280,17 @@ class _person_fileState extends State<person_file> {
                     ),
                     InkWell(
                         onTap: () {
-                          myApplication.mydialog(
+                          myApplication.myConfirmationdialog(
                               context,
                               "هل تريد تعديل الملف الشخصي ؟",
-                              () =>
-                                  myApplication.push_up(context, Profile_edit()));
+                              () => myApplication.push_up(context, Profile_edit()));
                         },
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text("تعديل الملف الشخصي",
                                   style: TextStyle(
-                                      color: Colors.black,
+                                      color: mycolors.fontColor,
                                       fontSize: myfonts.smallfont)),
                               SizedBox(
                                 width: myApplication.widthClc(50, context),
@@ -235,7 +310,7 @@ class _person_fileState extends State<person_file> {
                             children: [
                               Text("معلومات عن التطبيق",
                                   style: TextStyle(
-                                      color: Colors.black,
+                                      color: mycolors.fontColor,
                                       fontSize: myfonts.smallfont)),
                               SizedBox(
                                 width: myApplication.widthClc(50, context),
@@ -250,12 +325,16 @@ class _person_fileState extends State<person_file> {
                     InkWell(
                         onTap: () {
                           myApplication
-                              .mydialog(context, "هل تريد تسجيل الخروج ؟", () {
-                            FacebookAuth.instance.logOut();
-                            GoogleSignIn().signOut();
-                            fauth.signOut();
-                            myApplication.navigateToRemove(
-                                context, LoginScreen());
+                              .myConfirmationdialog(context, "هل تريد تسجيل الخروج ؟", () {
+                            CahchHelper.clearData();
+                            CahchHelper.saveData(key: "showHome", value: true);
+
+                            SignedIn = false;
+
+
+
+                            myApplication.navigateToRemove(context, SplashScreen(showHome: true, signMethod: "normal"));
+
                           });
                         },
                         child: Row(
@@ -263,7 +342,7 @@ class _person_fileState extends State<person_file> {
                             children: [
                               Text("تسجيل الخروج",
                                   style: TextStyle(
-                                      color: Colors.black,
+                                      color: mycolors.fontColor,
                                       fontSize: myfonts.smallfont)),
                               SizedBox(
                                 width: myApplication.widthClc(50, context),
@@ -277,25 +356,38 @@ class _person_fileState extends State<person_file> {
                     ),
                     InkWell(
                         onTap: () {
-                          myApplication.mydialog(
+                          myApplication.myConfirmationdialog(
                               context,
                               "هل تريد حذف الحساب ؟",
-                              () => {
-                                    if (fauth.currentUser != null)
-                                      {fauth.currentUser!.delete()},
-                                    FacebookAuth.instance.logOut(),
-                                    GoogleSignIn().signOut(),
-                                    myApplication.navigateToRemove(context, LoginScreen()), 
-                                ffire.collection("cusomers").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error")),
+                              (){
+                                    if (fauth.currentUser != null) {
+                                      fauth.currentUser!.delete();
+                                    };
 
-                              });
+                                    if(role == "صاحب ورشة"){
+                                      ffire.collection("Elwrash").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
+                                    }
+
+                                    CahchHelper.clearData();
+                                    CahchHelper.saveData(key: "showHome", value: true);
+
+                                    SignedIn = false;
+
+                                    myApplication.navigateToRemove(context, SplashScreen(showHome: true, signMethod: "normal"));
+                                ffire.collection("customers").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
+
+                        }
+
+
+
+                        );
                         },
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text("حذف الحساب",
                                   style: TextStyle(
-                                      color: Colors.black,
+                                      color: mycolors.fontColor,
                                       fontSize: myfonts.smallfont)),
                               SizedBox(
                                 width: myApplication.widthClc(50, context),

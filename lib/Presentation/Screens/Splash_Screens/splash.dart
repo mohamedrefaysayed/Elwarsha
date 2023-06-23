@@ -16,9 +16,10 @@ import '../auth/verfyEmailPage.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
     Key? key,
-    required this.showHome,
+    required this.showHome, required this.signMethod,
   }) : super(key: key);
   final bool showHome;
+  final String signMethod;
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -29,18 +30,23 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(const Duration(milliseconds: 1500), () async {
       if (widget.showHome) {
-        if (fauth.currentUser != null) {
-          if (!fauth.currentUser!.emailVerified) {
-            myApplication.navigateToRemove(context, const verfyEmailPage());
-          } else {
-            myApplication.navigateToRemove(context, const MainScreen());
+        if(SignedIn!){
+        if (widget.signMethod == "normal" && fauth.currentUser!= null) {
+          if(!fauth.currentUser!.emailVerified){
+            myApplication.navigateToRemove(context,  verfyEmailPage());
+
+          }else{
+            myApplication.navigateToRemove(context,  LoginScreen());
+
           }
-        } else if(await FacebookAuth.instance.accessToken!= null || await GoogleSignIn().isSignedIn()){
-            myApplication.navigateToRemove(context, const MainScreen());
+        }else{
+          myApplication.navigateToRemove(context, const MainScreen());
+        }
         }else {
           // ignore: use_build_context_synchronously
           myApplication.navigateToRemove(context,  LoginScreen());
         }
+
       } else {
         myApplication.navigateToRemove(context, const Onboard());
       }
@@ -62,47 +68,50 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Column(
               children: [
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: myApplication.hightClc(255, context),
-                      width: myApplication.widthClc(255, context),
-                      child: Image.asset(
-                        "assets/images/Icon.png",
-                        color: Colors.black,
+                Hero(
+                  tag: "الورشة",
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: myApplication.hightClc(255, context),
+                        width: myApplication.widthClc(255, context),
+                        child: Image.asset(
+                          "assets/images/Icon.png",
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: myApplication.hightClc(250, context),
-                      width: myApplication.widthClc(250, context),
-                      child: Image.asset(
-                        "assets/images/Icon.png",
-                        color: mycolors.popColor,
+                      SizedBox(
+                        height: myApplication.hightClc(250, context),
+                        width: myApplication.widthClc(250, context),
+                        child: Image.asset(
+                          "assets/images/Icon.png",
+                          color: mycolors.popColor,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: myApplication.hightClc(245, context),
-                      width: myApplication.widthClc(245, context),
+                      SizedBox(
+                        height: myApplication.hightClc(245, context),
+                        width: myApplication.widthClc(245, context),
 
-                      child: Image.asset(
-                        "assets/images/Icon.png",
-                        color: mycolors.secod_color,
+                        child: Image.asset(
+                          "assets/images/Icon.png",
+                          color: mycolors.secod_color,
 
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: myApplication.hightClc(245, context),
-                      width: myApplication.widthClc(245, context),
+                      SizedBox(
+                        height: myApplication.hightClc(245, context),
+                        width: myApplication.widthClc(245, context),
 
-                      child: Image.asset(
-                        "assets/images/blackScrew.png",
-                        color: mycolors.popColor,
+                        child: Image.asset(
+                          "assets/images/blackScrew.png",
+                          color: mycolors.popColor,
 
+                        ),
                       ),
-                    ),
 
 
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 200,

@@ -1,5 +1,8 @@
 import 'package:elwarsha/Constents/fontsize.dart';
 import 'package:elwarsha/Helper/MY_SnackBar.dart';
+import 'package:elwarsha/Presentation/Screens/Info/Car_Info.dart';
+import 'package:elwarsha/Presentation/Screens/Info/Elwarsha_Info.dart';
+import 'package:elwarsha/Presentation/Screens/Info/Sane3y_Data.dart';
 import 'package:elwarsha/Presentation/Screens/auth/Login_Screen.dart';
 import 'package:elwarsha/Presentation/Screens/auth/verfyEmailPage.dart';
 import 'package:elwarsha/business_logic/Cubits/Passwors_Obscure/pass_op_cubit.dart';
@@ -13,10 +16,11 @@ import 'package:email_validator/email_validator.dart';
 import '../../../../Constents/colors.dart';
 import '../../../../Helper/MyApplication.dart';
 import 'package:flutter/material.dart';
+import '../../../business_logic/Cubits/role/role_cubit.dart';
+
 
 // ignore: must_be_immutable
 class RegisterScreen extends StatelessWidget {
-
   bool emailconfirm = false;
 
   final formkey = GlobalKey<FormState>();
@@ -30,19 +34,15 @@ class RegisterScreen extends StatelessWidget {
   final otp4Controller = TextEditingController();
 
   // ignore: non_constant_identifier_names
-  final First_name = TextEditingController();
+  final name = TextEditingController();
 
-  // ignore: non_constant_identifier_names
-  final Second_name = TextEditingController();
-
-  final Email = TextEditingController();
+  final email = TextEditingController();
 
   final password = TextEditingController();
 
   EmailOTP myauth = EmailOTP();
 
-  String? role;
-
+  bool customreg = false;
 
   RegisterScreen({super.key});
 
@@ -56,10 +56,11 @@ class RegisterScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
+        backgroundColor: mycolors.first_color,
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: mycolors.first_color,
-          title:  Text(
+          title: Text(
             'إنشاء حساب',
             style: TextStyle(
               color: Colors.black,
@@ -76,19 +77,24 @@ class RegisterScreen extends StatelessWidget {
               if (state is RegisterLoading) {
                 load = true;
               } else if (state is RegisterSuccess) {
-                showTopSnackBar(Overlay.of(context),
-                    MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
+                showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
                 load = false;
-                myApplication.navigateToRemove(context, verfyEmailPage(firstname: First_name.text,secondname: Second_name.text, email: Email.text,));
+                customreg
+                ? (RoleCubit.role == "سائق سيارة" ? myApplication.navigateToRemove(context, CarInfo())
+                    : (RoleCubit.role == "صاحب ورشة" ? myApplication.navigateToRemove(context, elwarshaInfo(isregerster: true,)) : myApplication.navigateToRemove(context, Sane3yData())) )
+                : myApplication.navigateToRemove(context, verfyEmailPage(name: name.text, email: email.text,));
               } else if (state is RegisterFailuer) {
                 showTopSnackBar(Overlay.of(context),
                     CustomSnackBar.error(message: state.errormessage));
                 load = false;
-              }else{
-
-              }
+              } else {}
             },
             builder: (context, state) {
+              if (state is RegisterLoading) {
+                return Center(
+                  child: myApplication.myloading(context),
+                );
+              } else {
                 return Form(
                   key: formkey,
                   child: Container(
@@ -99,89 +105,101 @@ class RegisterScreen extends StatelessWidget {
                           child: Stack(
                             children: [
                               SizedBox(
-                                  height: myApplication.hightClc(100, context),
-                                  child: Image.asset("assets/images/الورشة.png",color: mycolors.popColor,)),
-                              SizedBox(
                                   height: myApplication.hightClc(95, context),
-                                  child: Image.asset("assets/images/الورشة.png",color: mycolors.secod_color,)),
+                                  child: Image.asset(
+                                    "assets/images/الورشة.png",
+                                    color: mycolors.popColor,
+                                  )),
+                              SizedBox(
+                                  height: myApplication.hightClc(90, context),
+                                  child: Image.asset(
+                                    "assets/images/الورشة.png",
+                                    color: mycolors.secod_color,
+                                  )),
                             ],
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 24),
+                          margin:const EdgeInsets.symmetric(horizontal: 24),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'الاسم الاول',
+                                'الاسم',
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
-                                    fontSize: myfonts.mediumfont, fontWeight: FontWeight.bold),
+                                    fontSize: myfonts.mediumfont,
+                                    fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
-                                height: myApplication.hightClc(10, context),
+                                height:
+                                myApplication.hightClc(10, context),
                               ),
                               TextFormField(
-                                controller: First_name,
+                                controller: name,
                                 textAlign: TextAlign.end,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'أدخل أسمك';
-                                  } else if (RegExp(r'\d').hasMatch(value)) {
+                                  } else if (RegExp(r'\d')
+                                      .hasMatch(value)) {
                                     return '! أدخل أسم صالح';
                                   } else {
                                     return null;
                                   }
                                 },
                                 decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(
+                                  contentPadding:
+                                  const EdgeInsets.symmetric(
                                       vertical: 5, horizontal: 10),
                                   filled: true,
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius:
+                                    BorderRadius.circular(10.0),
                                   ),
-                                  focusedBorder: const OutlineInputBorder(),
-                                  hintText: 'أدخل أسمك الاول',
+                                  focusedBorder:
+                                  const OutlineInputBorder(),
+                                  hintText: 'أدخل أسمك',
                                 ),
                               ),
                               const SizedBox(
                                 height: 10,
                               ),
-                              const Text(
-                                'الاسم الثانى',
-                                textAlign: TextAlign.end,
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              TextFormField(
-                                controller: Second_name,
-                                textAlign: TextAlign.end,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'أدخل أسم العائلة';
-                                  } else if (RegExp(r'\d').hasMatch(value)) {
-                                    return '! أدخل أسم صالح';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(),
-                                  hintText: 'أدخل أسمك الثانى / اسم العائلة',
-                                ),
-                              ),
+                              // const Text(
+                              //   'الاسم الثانى',
+                              //   textAlign: TextAlign.end,
+                              //   style: TextStyle(
+                              //       fontSize: 20, fontWeight: FontWeight.bold),
+                              // ),
+                              // const SizedBox(
+                              //   height: 5,
+                              // ),
+                              // TextFormField(
+                              //   controller: Second_name,
+                              //   textAlign: TextAlign.end,
+                              //   validator: (value) {
+                              //     if (value!.isEmpty) {
+                              //       return 'أدخل أسم العائلة';
+                              //     } else if (RegExp(r'\d').hasMatch(value)) {
+                              //       return '! أدخل أسم صالح';
+                              //     } else {
+                              //       return null;
+                              //     }
+                              //   },
+                              //   decoration: InputDecoration(
+                              //     contentPadding: const EdgeInsets.symmetric(
+                              //         vertical: 5, horizontal: 10),
+                              //     filled: true,
+                              //     fillColor: Colors.white,
+                              //     border: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(10.0),
+                              //     ),
+                              //     focusedBorder: const OutlineInputBorder(),
+                              //     hintText: 'أدخل أسمك الثانى / اسم العائلة',
+                              //   ),
+                              // ),
                               const SizedBox(
                                 height: 10,
                               ),
@@ -189,33 +207,38 @@ class RegisterScreen extends StatelessWidget {
                                 'الايميل',
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
                                 height: 5,
                               ),
                               TextFormField(
                                 keyboardType: TextInputType.emailAddress,
-                                controller: Email,
+                                controller: email,
                                 textAlign: TextAlign.end,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'أدخل الإيميل';
-                                  } else if (!EmailValidator.validate(value)) {
+                                  } else if (!EmailValidator.validate(
+                                      value)) {
                                     return '! أدخل أيميل صالح';
                                   } else {
                                     return null;
                                   }
                                 },
                                 decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(
+                                  contentPadding:
+                                  const EdgeInsets.symmetric(
                                       vertical: 5, horizontal: 10),
                                   filled: true,
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius:
+                                    BorderRadius.circular(10.0),
                                   ),
-                                  focusedBorder: const OutlineInputBorder(),
+                                  focusedBorder:
+                                  const OutlineInputBorder(),
                                   hintText: 'أدخل الايميل الخاص بك',
                                 ),
                               ),
@@ -226,22 +249,24 @@ class RegisterScreen extends StatelessWidget {
                                 'الرقم السرى',
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
                                 height: 5,
                               ),
                               BlocConsumer<PassOpCubit, PassOpState>(
-                                listener: (context, state) {
-                                },
+                                listener: (context, state) {},
                                 builder: (context, state) {
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.end,
                                     children: [
                                       TextFormField(
                                         controller: password,
                                         textAlign: TextAlign.end,
-                                        obscureText: PassOpCubit.passwordVisible,
+                                        obscureText:
+                                        PassOpCubit.passwordVisible,
                                         validator: (value) {
                                           if (value!.isEmpty) {
                                             return 'أدخل الرقم السرى';
@@ -252,32 +277,41 @@ class RegisterScreen extends StatelessWidget {
                                           }
                                         },
                                         onChanged: (value) {
-                                          BlocProvider.of<PassOpCubit>(context).scure();
+                                          BlocProvider.of<PassOpCubit>(
+                                              context)
+                                              .scure();
                                         },
                                         keyboardType:
-                                            TextInputType.visiblePassword,
+                                        TextInputType.visiblePassword,
                                         decoration: InputDecoration(
-                                          contentPadding: const EdgeInsets.symmetric(
-                                              vertical: 5, horizontal: 10),
+                                          contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 5,
+                                              horizontal: 10),
                                           prefixIcon: IconButton(
                                             color: mycolors.secod_color,
-                                            icon: Icon(
-                                                PassOpCubit.passwordVisible
+                                            icon: Icon(PassOpCubit
+                                                .passwordVisible
                                                 ? Icons.visibility
                                                 : Icons.visibility_off),
                                             onPressed: () {
-                                              BlocProvider.of<PassOpCubit>(context).changstate();
+                                              BlocProvider.of<
+                                                  PassOpCubit>(
+                                                  context)
+                                                  .changstate();
                                             },
                                           ),
                                           filled: true,
                                           fillColor: Colors.white,
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(10.0),
+                                            BorderRadius.circular(
+                                                10.0),
                                           ),
                                           focusedBorder:
-                                              const OutlineInputBorder(),
-                                          hintText: 'أدخل الرقم السرى الخاص بك',
+                                          const OutlineInputBorder(),
+                                          hintText:
+                                          'أدخل الرقم السرى الخاص بك',
                                         ),
                                       ),
                                       const SizedBox(
@@ -295,54 +329,66 @@ class RegisterScreen extends StatelessWidget {
                                       ),
                                       TextFormField(
                                         textAlign: TextAlign.end,
-                                        obscureText:PassOpCubit.passwordVisible,
+                                        obscureText:
+                                        PassOpCubit.passwordVisible,
                                         validator: (value) {
                                           if (value!.isEmpty) {
                                             return 'أدخل الرقم السرى';
-                                          } else if (value != password.text) {
+                                          } else if (value !=
+                                              password.text) {
                                             return '!الرقم السرى غير مطابق';
                                           } else {
                                             return null;
                                           }
                                         },
                                         onChanged: (value) {
-                                          BlocProvider.of<PassOpCubit>(context).scure();
+                                          BlocProvider.of<PassOpCubit>(
+                                              context)
+                                              .scure();
                                         },
                                         keyboardType:
-                                            TextInputType.visiblePassword,
+                                        TextInputType.visiblePassword,
                                         decoration: InputDecoration(
-                                          contentPadding: const EdgeInsets.symmetric(
-                                              vertical: 5, horizontal: 10),
+                                          contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 5,
+                                              horizontal: 10),
                                           prefixIcon: IconButton(
                                             color: mycolors.secod_color,
-                                            icon: Icon(
-                                                PassOpCubit.passwordVisible
+                                            icon: Icon(PassOpCubit
+                                                .passwordVisible
                                                 ? Icons.visibility
                                                 : Icons.visibility_off),
                                             onPressed: () {
-                                              BlocProvider.of<PassOpCubit>(context).changstate();
+                                              BlocProvider.of<
+                                                  PassOpCubit>(
+                                                  context)
+                                                  .changstate();
                                             },
                                           ),
                                           filled: true,
                                           fillColor: Colors.white,
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(10.0),
+                                            BorderRadius.circular(
+                                                10.0),
                                           ),
                                           focusedBorder:
-                                              const OutlineInputBorder(),
-                                          hintText: 'أدخل تأكيد الرقم السرى',
+                                          const OutlineInputBorder(),
+                                          hintText:
+                                          'أدخل تأكيد الرقم السرى',
                                         ),
                                       ),
                                     ],
                                   );
                                 },
                               ),
+
                             ],
                           ),
                         ),
                         const SizedBox(
-                          height: 50,
+                          height: 35,
                         ),
                         SizedBox(
                           height: 50,
@@ -353,15 +399,18 @@ class RegisterScreen extends StatelessWidget {
                             onPressed: () async {
                               myApplication.keyboardFocus(context);
                               if (formkey.currentState!.validate()) {
-                                BlocProvider.of<RegisterCubit>(
-                                    context)
-                                    .SignupUser(
-                                    email:
-                                    Email.text.trim(),
-                                    password: password.text.trim(),
-                                    First_name: First_name.text,
-                                    Second_name: Second_name.text,
-                                    Email: Email.text);
+                                myApplication.roleDialog(context, (){
+                                  if(RoleCubit.role != null){
+                                    BlocProvider.of<RegisterCubit>(context)
+                                        .SignupUser(
+                                        password: password.text.trim(),
+                                        name: name.text.trim(),
+                                        email: email.text.trim());
+                                  }else{
+                                    showTopSnackBar(Overlay.of(context), const MySnackBar.error(message: "يجب اختيار الدور")
+                                    );
+                                  }
+                                });
                               }
                             },
                             child: const Text(
@@ -372,6 +421,72 @@ class RegisterScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(20, context),
+                        ),
+                        Center(
+                            child: Text(
+                              "أو",
+                              style: TextStyle(
+                                  fontSize: myfonts.smallfont,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                        Center(
+                            child: Text(
+                              "يمكنك التسجيل ب",
+                              style: TextStyle(
+                                  fontSize: myfonts.smallfont,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                        SizedBox(
+                          height: myApplication.hightClc(20, context),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              child: Image.asset(
+                                "assets/images/Icons/facebook.png",
+                                height: myApplication.hightClc(40, context),
+                              ),
+                              onTap: () async {
+                                myApplication.roleDialog(context, (){
+                                  if(RoleCubit.role != null){
+                                    customreg =true;
+                                    BlocProvider.of<RegisterCubit>(context)
+                                        .SignupFacebookUser(context);
+                                  }else{
+                                    showTopSnackBar(Overlay.of(context), const MySnackBar.error(message: "يجب اختيار الدور")
+                                    );
+                                  }
+                                });
+
+                              },
+                            ),
+                            SizedBox(
+                              width: myApplication.widthClc(50, context),
+                            ),
+                            InkWell(
+                              child: Image.asset(
+                                "assets/images/Icons/google.png",
+                                height: myApplication.hightClc(40, context),
+                              ),
+                              onTap: () async {
+                                myApplication.roleDialog(context, (){
+                                  if(RoleCubit.role != null){
+                                    customreg =true;
+                                    BlocProvider.of<RegisterCubit>(context)
+                                        .SignupGoogelUser(context);
+                                  }else{
+                                    showTopSnackBar(Overlay.of(context), const MySnackBar.error(message: "يجب اختيار الدور")
+                                    );
+                                  }
+                                });
+
+                              },
+                            ),
+                          ],
                         ),
                         const SizedBox(
                           height: 10,
@@ -386,7 +501,8 @@ class RegisterScreen extends StatelessWidget {
                                   if (!currentFocus.hasPrimaryFocus) {
                                     currentFocus.unfocus();
                                   }
-                                  myApplication.navigateToRemove(context, LoginScreen());
+                                  myApplication.navigateToRemove(
+                                      context, LoginScreen());
                                 },
                                 child: Text(
                                   "تسجيل الدخول",
@@ -405,7 +521,8 @@ class RegisterScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-              );
+                );
+              }
             },
           ),
         ),

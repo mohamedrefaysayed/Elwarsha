@@ -111,17 +111,6 @@ class MySnackBarState extends State<MySnackBar> {
       width: double.infinity,
       child: Stack(
         children: [
-          Positioned(
-            top: widget.iconPositionTop,
-            left: widget.iconPositionLeft,
-            child: SizedBox(
-              height: 80,
-              child: Transform.rotate(
-                angle: widget.iconRotationAngle * pi / 180,
-                child: widget.icon,
-              ),
-            ),
-          ),
           Center(
             child: Padding(
               padding: widget.messagePadding,

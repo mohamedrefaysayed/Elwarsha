@@ -16,12 +16,10 @@ import 'Login_Screen.dart';
 
 // ignore: camel_case_types
 class verfyEmailPage extends StatefulWidget {
-  const verfyEmailPage({Key? key,this.firstname,this.secondname,  this.email}) : super(key: key);
+  const verfyEmailPage({Key? key,this.name,  this.email}) : super(key: key);
 
   // ignore: prefer_typing_uninitialized_variables
-  final firstname;
-  // ignore: prefer_typing_uninitialized_variables
-  final secondname;
+  final name;
   // ignore: prefer_typing_uninitialized_variables
   final email;
 

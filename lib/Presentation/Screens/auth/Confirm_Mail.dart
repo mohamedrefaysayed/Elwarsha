@@ -51,17 +51,19 @@ class ConfirmMail extends StatelessWidget {
         ),
         body: BlocConsumer<ConfirmMailCubit, ConfirmMailState>(
           listener: (context, state) {
-            if(state is ConfirmMailLoading){
-              load = true;
-            }else if(state is ConfirmMailSuccess){
-              load = false;
-              myApplication.navigateTo(ResetPassowrd(email: email.text), context);
+             if(state is ConfirmMailSuccess){
+              myApplication.push_up(context,ResetPassowrd(email: email.text, title: 'نسيت كلمة السر', type: 'password',));
             }else if(state is ConfirmMailFailure ){
               load = false;
               showTopSnackBar(Overlay.of(context),
                   MySnackBar.error(message: state.errormessage));            }
           },
           builder: (context, state) {
+            if(state is ConfirmMailLoading){
+              return Center(
+                child: myApplication.myloading(context),
+              );
+            }else{
               return Form(
                 key: formkey,
                 child: Container(
@@ -125,8 +127,7 @@ class ConfirmMail extends StatelessWidget {
                               onPressed: ()  {
                                 if(formkey.currentState!.validate()) {
                                   myApplication.keyboardFocus(context);
-                                  BlocProvider.of<ConfirmMailCubit>(context)
-                                      .Reset_password(email: email);
+                                  BlocProvider.of<ConfirmMailCubit>(context).Reset_password(email: email.text);
                                 }
                               },
                               child: Text(
@@ -141,6 +142,8 @@ class ConfirmMail extends StatelessWidget {
                   ),
                 ),
               );
+
+            }
           },
         ),
       ),

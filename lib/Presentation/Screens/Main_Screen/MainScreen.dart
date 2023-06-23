@@ -2,6 +2,7 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:elwarsha/Helper/MyApplication.dart';
 import 'package:elwarsha/business_logic/Cubits/nav_bar/bottom_nav_bar_cubit.dart';
+import 'package:elwarsha/global/global.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../Constents/colors.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class _MainScreenState extends State<MainScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBody: true,
       backgroundColor: mycolors.first_color,
       body: WillPopScope(
@@ -51,7 +53,7 @@ class _MainScreenState extends State<MainScreen>
       ),
       bottomNavigationBar: BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
         builder: (context, state) {
-          return CurvedNavigationBar(
+          return role == "سائق سيارة" ? CurvedNavigationBar(
             animationCurve: Curves.ease,
             animationDuration: const Duration(milliseconds: 500),
             index: BottomNavBarCubit.selectedIndex,
@@ -83,6 +85,52 @@ class _MainScreenState extends State<MainScreen>
                     color: mycolors.secod_color,
                   ),
                   label: "المفضلة",
+                  labelStyle: TextStyle(color: mycolors.secod_color)),
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.person,
+                    color: mycolors.secod_color,
+                  ),
+                  label: "صفحتى",
+                  labelStyle: TextStyle(color: mycolors.secod_color)),
+            ],
+            color: mycolors.popColor,
+            backgroundColor: Colors.transparent,
+            buttonBackgroundColor: mycolors.popColor,
+            onTap: BlocProvider.of<BottomNavBarCubit>(context).onItemclicked,
+          )
+              : CurvedNavigationBar(
+            animationCurve: Curves.ease,
+            animationDuration: const Duration(milliseconds: 500),
+            index: BottomNavBarCubit.selectedIndex,
+            items: [
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.shopping_cart,
+                    color: mycolors.secod_color,
+                  ),
+                  label: "متجرى",
+                  labelStyle: TextStyle(color: mycolors.secod_color)),
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.history,
+                    color: mycolors.secod_color,
+                  ),
+                  label: "الأرشيف",
+                  labelStyle: TextStyle(color: mycolors.secod_color)),
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.map,
+                    color: mycolors.secod_color,
+                  ),
+                  label: "الخريطة",
+                  labelStyle: TextStyle(color: mycolors.secod_color)),
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.groups,
+                    color: mycolors.secod_color,
+                  ),
+                  label: "الطاقم",
                   labelStyle: TextStyle(color: mycolors.secod_color)),
               CurvedNavigationBarItem(
                   child: Icon(

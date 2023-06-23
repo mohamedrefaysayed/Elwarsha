@@ -10,6 +10,8 @@ part 'car_info_state.dart';
 
 class CarInfoCubit extends Cubit<CarInfoState> {
   static Map<String, dynamic>? Info ;
+  static Map<String, dynamic>? agencyInfo ;
+
 
   // ignore: non_constant_identifier_names
   static String? Car ;
@@ -67,19 +69,34 @@ class CarInfoCubit extends Cubit<CarInfoState> {
         print('Car data: ${value.data()}');
         Info = value.data() as Map<String, dynamic>;
       }).then((value){
-        emit(CarInfoSucsses());
         Car = Info!["car"];
          Model = Info!["model"];
          EnginCap = Info!["enginCap"];
          EnginPow = Info!["enginPow"];
          StructType = Info!["structType"];
          agency = Info!["agency"];
+
+      });
+
+      emit(CarInfoSucsses());
+
+    } on FirebaseException {
+      emit(CarInfoFailuer());
+    }
+
+  }
+  Future<void>getAgencyInfo() async {
+    try{
+      await ffire.collection('customers').doc(userKey).collection("car").doc("agency").get().then((DocumentSnapshot  value){
+        print('Agncy data: ${value.data()}');
+        agencyInfo = value.data() as Map<String, dynamic>;
       });
     } on FirebaseException {
       emit(CarInfoFailuer());
     }
 
   }
+
 
 
   void settype(String value){
@@ -113,6 +130,9 @@ class CarInfoCubit extends Cubit<CarInfoState> {
 
   }
 
+  Loading(){
+    emit(CarInfoLoading());
+  }
 
 
 }

@@ -1,5 +1,6 @@
 import 'package:elwarsha/Presentation/Screens/auth/Login_Screen.dart';
 import 'package:elwarsha/business_logic/Cubits/Reset_password/reset_password_cubit.dart';
+import 'package:elwarsha/global/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:slide_countdown/slide_countdown.dart';
@@ -11,10 +12,13 @@ import '../../../Helper/MY_SnackBar.dart';
 class ResetPassowrd extends StatefulWidget {
   const ResetPassowrd({
     Key? key,
-    required this.email,
+    required this.email, required this.title, required this.type,
   }) : super(key: key);
   // ignore: prefer_typing_uninitialized_variables
   final email;
+  final String  title;
+  final String type;
+
 
   @override
   State<ResetPassowrd> createState() => _ResetPassowrdState();
@@ -25,6 +29,12 @@ class _ResetPassowrdState extends State<ResetPassowrd> {
   void initState() {
     super.initState();
     BlocProvider.of<ResetPasswordCubit>(context).cantsent();
+    widget.type == "email"
+    ? ()async{
+      await fauth.currentUser?.updateEmail(widget.email!).whenComplete(() =>BlocProvider.of<ResetPasswordCubit>(context).change_email(email: widget.email),
+      );
+    }
+    : BlocProvider.of<ResetPasswordCubit>(context).Reset_password(email: widget.email);
   }
   @override
   Widget build(BuildContext context) {
@@ -32,8 +42,8 @@ class _ResetPassowrdState extends State<ResetPassowrd> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: mycolors.first_color,
-        title: const Text(
-          'نسيت كلمة السر',
+        title:  Text(
+          widget.title,
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -41,6 +51,15 @@ class _ResetPassowrdState extends State<ResetPassowrd> {
           ),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new_sharp,
+            color: mycolors.secod_color,
+            size: 30,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+
       ),
       body: Container(
         color: mycolors.first_color,
@@ -50,7 +69,7 @@ class _ResetPassowrdState extends State<ResetPassowrd> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "لقد تم ارسال رابط تغيير كلمة السر على \n${widget.email} ",
+                "لقد تم ارسال رابط ${widget.title} على \n${widget.email} ",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: myfonts.largfont,
@@ -98,9 +117,9 @@ class _ResetPassowrdState extends State<ResetPassowrd> {
                               onPressed: ResetPasswordCubit.cantsend == false ?
                                   () {
                                     BlocProvider.of<ResetPasswordCubit>(context).cantsent();
-                                BlocProvider.of<ResetPasswordCubit>(context)
-                                    .Reset_password(email: widget.email);
-                              }
+                                    widget.type == "email"
+                                        ? BlocProvider.of<ResetPasswordCubit>(context).change_email(email: widget.email)
+                                        : BlocProvider.of<ResetPasswordCubit>(context).Reset_password(email: widget.email);                              }
                                   : null,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

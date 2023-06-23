@@ -1,3 +1,6 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:elwarsha/Constents/fontsize.dart';
+
 import '../../../Constents/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Helper/MyApplication.dart';
@@ -20,112 +23,244 @@ class _OnboardState extends State<Onboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: mycolors.fontColor,
       appBar: AppBar(
         backgroundColor: mycolors.first_color,
-        elevation: 0,
+        elevation: 0.0,
+        leading: TextButton(
+          style: ButtonStyle(
+          ),
+          onPressed: () => onboard.jumpToPage(2),
+          child:  Text(
+            'تخط ',
+            style: TextStyle(fontSize: myfonts.largfont,color: Colors.white60),
+          ),
+        ),
+
       ),
       body: Container(
         decoration: BoxDecoration(
           color: mycolors.first_color,
         ),
         padding: const EdgeInsets.only(bottom: 50),
-        child: PageView(
-          onPageChanged: (index) {
-            setState(() => isLastPage = index == 2);
+        child: ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.transparent, mycolors.first_color],
+              stops: [0.35, 3.5],
+            ).createShader(bounds);
           },
-          controller: onboard,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/الورشة.png",
-                    height: 100.0,
-                    width: 100.0,
-                  ),
-                  Image.asset(
-                    "assets/images/Hybrid car-bro 1.png",
-                    height: 355.0,
-                    width: 322.0,
-                  ),
-                  const SizedBox(
-                      height: 140,
-                      width: 300,
-                      child: Text(
-                        'يساعدك على طلب ورشة متنقلة \n و حل مشاكل أعطال سيارتك ',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      )),
-                ],
+          blendMode: BlendMode.srcATop,
+          child: PageView(
+            onPageChanged: (index) {
+              setState(() => isLastPage = index == 2);
+            },
+            controller: onboard,
+            children: [
+              Container(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        SizedBox(
+                          height: myApplication.hightClc(155, context),
+                          width: myApplication.widthClc(155, context),
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(150, context),
+                          width: myApplication.widthClc(150, context),
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: mycolors.popColor,
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(145, context),
+                          width: myApplication.widthClc(145, context),
+
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: mycolors.secod_color,
+
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(145, context),
+                          width: myApplication.widthClc(145, context),
+
+                          child: Image.asset(
+                            "assets/images/blackScrew.png",
+                            color: mycolors.popColor,
+
+                          ),
+                        ),
+
+
+                      ],
+                    ),
+                    Image.asset(
+                      "assets/images/Hybrid car-bro 1.png",
+                      height: 355.0,
+                      width: 322.0,
+                    ),
+                     SizedBox(
+                        height: 140,
+                        width: 300,
+
+                        child: Text(
+                          'يساعدك على طلب ورشة متنقلة \n و حل مشاكل أعطال سيارتك ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: mycolors.first_color,
+              Container(
+                decoration: BoxDecoration(
+                ),
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        SizedBox(
+                          height: myApplication.hightClc(155, context),
+                          width: myApplication.widthClc(155, context),
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(150, context),
+                          width: myApplication.widthClc(150, context),
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: mycolors.popColor,
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(145, context),
+                          width: myApplication.widthClc(145, context),
+
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: mycolors.secod_color,
+
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(145, context),
+                          width: myApplication.widthClc(145, context),
+
+                          child: Image.asset(
+                            "assets/images/blackScrew.png",
+                            color: mycolors.popColor,
+
+                          ),
+                        ),
+
+
+                      ],
+                    ),
+                    Image.asset(
+                      "assets/images/Discount-pana 1.png",
+                      height: 355.0,
+                      width: 322.0,
+                    ),
+                    const SizedBox(
+                        height: 140,
+                        width: 300,
+                        child: Text(
+                          'خدمة معرفة تكلفة التصليح قبل الطلب وعروض وخصومات على قطع الغيار ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )),
+                  ],
+                ),
               ),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/الورشة.png",
-                    height: 100.0,
-                    width: 100.0,
-                  ),
-                  Image.asset(
-                    "assets/images/Discount-pana 1.png",
-                    height: 355.0,
-                    width: 322.0,
-                  ),
-                  const SizedBox(
-                      height: 140,
-                      width: 300,
-                      child: Text(
-                        'خدمة معرفة تكلفة التصليح قبل الطلب وعروض وخصومات على قطع الغيار ',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      )),
-                ],
+              Container(
+                decoration: BoxDecoration(
+                ),
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        SizedBox(
+                          height: myApplication.hightClc(155, context),
+                          width: myApplication.widthClc(155, context),
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(150, context),
+                          width: myApplication.widthClc(150, context),
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: mycolors.popColor,
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(145, context),
+                          width: myApplication.widthClc(145, context),
+
+                          child: Image.asset(
+                            "assets/images/Icon.png",
+                            color: mycolors.secod_color,
+
+                          ),
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(145, context),
+                          width: myApplication.widthClc(145, context),
+
+                          child: Image.asset(
+                            "assets/images/blackScrew.png",
+                            color: mycolors.popColor,
+
+                          ),
+                        ),
+
+
+                      ],
+                    ),
+                    Image.asset(
+                      "assets/images/City driver-pana 1.png",
+                      height: 355.0,
+                      width: 322.0,
+                    ),
+                    const SizedBox(
+                        height: 140,
+                        width: 300,
+                        child: Text(
+                          'يتميز التطبيق بخاصية البحث من خلال الكاميرا ومعرفة خط سير الورشة إليك ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: mycolors.first_color,
-              ),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/الورشة.png",
-                    height: 100.0,
-                    width: 100.0,
-                  ),
-                  Image.asset(
-                    "assets/images/City driver-pana 1.png",
-                    height: 355.0,
-                    width: 322.0,
-                  ),
-                  const SizedBox(
-                      height: 140,
-                      width: 300,
-                      child: Text(
-                        'يتميز التطبيق بخاصية البحث من خلال الكاميرا ومعرفة خط سير الورشة إليك ',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      )),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomSheet: isLastPage
@@ -151,45 +286,39 @@ class _OnboardState extends State<Onboard> {
                 },
               ),
             )
-          : SizedBox(
-              height: MediaQuery.of(context).size.height - 800,
+          : Container(
+        color: mycolors.fontColor,
+        width: double.infinity,
+              height: MediaQuery.of(context).size.height - 776,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: mycolors.first_color,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    TextButton(
-                      onPressed: () => onboard.jumpToPage(2),
-                      child: const Text(
-                        'تخطى',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                    Center(
-                      child: SmoothPageIndicator(
-                          controller: onboard, // PageController
-                          count: 3,
-                          effect: WormEffect(
-                              dotColor: Colors.white,
-                              activeDotColor: mycolors.secod_color),
-                          onDotClicked: (index) => onboard.animateToPage(
-                                index,
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeIn,
-                              ) // your preferred effect
-                          ),
-                    ),
+                    SmoothPageIndicator(
+                        controller: onboard, // PageController
+                        count: 3,
+                        effect: WormEffect(
+                            dotColor: Colors.white,
+                            activeDotColor: mycolors.secod_color),
+                        onDotClicked: (index) => onboard.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeIn,
+                            ) // your preferred effect
+                        ),
                     TextButton(
                       onPressed: () => onboard.nextPage(
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                       ),
-                      child: const Text(
+                      child:  Text(
                         'التالى',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: myfonts.largfont,color: Colors.white60),
                       ),
                     ),
                   ],
