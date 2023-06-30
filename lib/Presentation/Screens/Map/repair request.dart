@@ -1,4 +1,6 @@
 // ignore: file_names
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elwarsha/business_logic/Cubits/Map/map_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/RepairRequest/repair_request_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -135,7 +137,7 @@ class Repair_Request extends StatelessWidget {
                     child: ElevatedButton(
                       style:
                       ElevatedButton.styleFrom(backgroundColor: Colors.white),
-                      onPressed: () {
+                      onPressed: () async{
                         if (RepairRequestCubit.repair == null) {
                           myApplication.showToast(
                               text: "اختر العطل", color: Colors.white);
@@ -149,9 +151,14 @@ class Repair_Request extends StatelessWidget {
                             myApplication.navigateToReplace(
                                 context, const CustomCarInfo());
                           } else {
-                            isinrequestmode = true;
+                            isinrequestmode = false;
                             myApplication.navigateToRemove(
                                 context, const MainScreen());
+                            await ffire.collection("Requests").doc(DateTime.now().toString()).set({
+                              "broblem" : RepairRequestCubit.repair,
+                              "location" : GeoPoint(MapCubit.position!.latitude,MapCubit.position!.longitude),
+                              "id" : userKey,
+                            });
                           }
                         }
                       },

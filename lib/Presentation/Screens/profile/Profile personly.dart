@@ -81,8 +81,8 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                               ),
                               SizedBox(height: 30,),
                               Container(
-                                height: 30,
-                                width: 150,
+                                height: myApplication.hightClc(30, context),
+                                width: myApplication.widthClc(150, context),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.grey.withOpacity(0.5),
@@ -192,7 +192,7 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                                role == "سائق سيارة" ? "سيارتي" : "الورشة",
+                                Role == "سائق سيارة" ? "سيارتي" : "الورشة",
                                 style: TextStyle(
                                     color: mycolors.fontColor,
                                     fontSize: myfonts.smallfont)),
@@ -200,7 +200,7 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                               width: myApplication.widthClc(50, context),
                             ),
                             Icon(
-                              role == "سائق سيارة" ?  myicons.directions_car : Icons.home_work_sharp,
+                              Role == "سائق سيارة" ?  myicons.directions_car : Icons.home_work_sharp,
 
                               color: mycolors.secod_color,
                               size: myApplication.widthClc(25, context),
@@ -209,8 +209,8 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                       onTap: () {
                         myApplication.myConfirmationdialog(
                             context,
-                            role == "سائق سيارة" ? "هل تريد تغيير بيانات سياراتك ؟" : "هل تريد تغيير بيانات ورشتك ؟",
-                            () => role == "سائق سيارة" ? myApplication.push_up(context,CarInfo(isregerster: false,))
+                            Role == "سائق سيارة" ? "هل تريد تغيير بيانات سياراتك ؟" : "هل تريد تغيير بيانات ورشتك ؟",
+                            () => Role == "سائق سيارة" ? myApplication.push_up(context,CarInfo(isregerster: false,))
                                 : myApplication.push_up(context, elwarshaInfo(isregerster: false,)),
                         );
                       },
@@ -324,6 +324,10 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                     ),
                     InkWell(
                         onTap: () {
+
+                          if(fauth.currentUser!=null){
+                            fauth.signOut();
+                          }
                           myApplication
                               .myConfirmationdialog(context, "هل تريد تسجيل الخروج ؟", () {
                             CahchHelper.clearData();
@@ -359,13 +363,14 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                           myApplication.myConfirmationdialog(
                               context,
                               "هل تريد حذف الحساب ؟",
-                              (){
+                              ()async{
                                     if (fauth.currentUser != null) {
-                                      fauth.currentUser!.delete();
+                                      await fauth.currentUser!.delete();
                                     };
 
-                                    if(role == "صاحب ورشة"){
-                                      ffire.collection("Elwrash").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
+
+                                    if(Role == "صاحب ورشة"){
+                                      await ffire.collection("Elwrash").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
                                     }
 
                                     CahchHelper.clearData();
@@ -374,7 +379,7 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                                     SignedIn = false;
 
                                     myApplication.navigateToRemove(context, SplashScreen(showHome: true, signMethod: "normal"));
-                                ffire.collection("customers").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
+                                await ffire.collection("customers").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
 
                         }
 

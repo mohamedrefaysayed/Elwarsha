@@ -21,19 +21,13 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void>LoginUser({required email ,required password,context}) async {
         try {
           emit(LoginLoading());
-          await  FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email, password: password);
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setString("userKey", fauth.currentUser!.uid);
+          await  FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+
+            await CahchHelper.saveData(key: "userKey", value: await fauth.currentUser!.uid);
             await CahchHelper.saveData(key: "signedIn", value: true);
             await CahchHelper.saveData(key: "signMethod",value: "normal");
 
-            userKey = fauth.currentUser!.uid;
-            await BlocProvider.of<GetInfoCubit>(context).getInfo();
-            print(GetInfoCubit.Info);
-            await CahchHelper.saveData(key: "role", value: GetInfoCubit.Info!["role"]);
-
-            role = GetInfoCubit.Info!["role"];
+            userKey = await fauth.currentUser!.uid;
 
           emit(LoginSuccess());
 
@@ -48,6 +42,7 @@ class LoginCubit extends Cubit<LoginState> {
           print(e.toString());
         }
   }
+
   Future<void>LoginGoogelUser(context) async {
     try {
       emit(LoginLoading());
@@ -69,11 +64,11 @@ class LoginCubit extends Cubit<LoginState> {
             await CahchHelper.saveData(key: "signedIn", value: true);
             await CahchHelper.saveData(key: "signMethod",value: "");
 
-            userKey = GoogleUser!.id;
+            userKey = await GoogleUser!.id;
             await BlocProvider.of<GetInfoCubit>(context).getInfo();
             await CahchHelper.saveData(key: "role", value: GetInfoCubit.Info!["role"]);
 
-            role = GetInfoCubit.Info!["role"];
+            Role = GetInfoCubit.Info!["role"];
 
             emit(LoginSuccess());
           }
@@ -103,11 +98,11 @@ class LoginCubit extends Cubit<LoginState> {
         await CahchHelper.saveData(key: "signedIn", value: true);
         await CahchHelper.saveData(key: "signMethod",value: "");
 
-        userKey = FacebookUser!["id"];
+        userKey = await FacebookUser!["id"];
         await BlocProvider.of<GetInfoCubit>(context).getInfo();
         await CahchHelper.saveData(key: "role", value: GetInfoCubit.Info!["role"]);
 
-        role = GetInfoCubit.Info!["role"];
+        Role = GetInfoCubit.Info!["role"];
 
         emit(LoginSuccess());
 

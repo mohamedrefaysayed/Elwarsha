@@ -27,6 +27,10 @@ class _Elwarsha_profileState extends State<Elwarsha_profile> {
     super.initState();
   }
 
+  int virtcaldivhight = 1;
+
+
+
   infoLoading() {
     return Container(
       width: double.infinity,
@@ -158,7 +162,7 @@ class _Elwarsha_profileState extends State<Elwarsha_profile> {
 
 
                             SizedBox(
-                              height: myApplication.hightClc(30, context),
+                              height: myApplication.hightClc(100, context),
                             ),
                         Container(
                           height: myApplication.hightClc(50, context),
@@ -181,7 +185,7 @@ class _Elwarsha_profileState extends State<Elwarsha_profile> {
                               )),
                         ),
                         SizedBox(
-                          height: myApplication.hightClc(20, context),
+                          height: myApplication.hightClc(50, context),
                         ),
 
                         Row(
@@ -208,62 +212,95 @@ class _Elwarsha_profileState extends State<Elwarsha_profile> {
                                 SizedBox(
                                   height: myApplication.hightClc(10, context),
                                 ),
-                                Container(
-                                  width:300,
-                                  child: ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: 5,
-                                      itemBuilder:(context,index){
-                                        return  Padding(
-                                          padding:  EdgeInsets.symmetric(vertical: 10),
-                                          child: Container(
-                                            width: myApplication.widthClc(300, context),
-                                            padding: EdgeInsetsDirectional.all(5),
-                                            decoration: BoxDecoration(
-                                              // color: Colors.black,
-                                              border: Border.all(color: Colors.black),
-                                              borderRadius: BorderRadius.circular(10),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: [
-                                                    Text("محمد ابراهيم",
-                                                        style:
-                                                        TextStyle(fontSize: 16, color: mycolors.secod_color)),
-                                                    Container(
-                                                      padding: EdgeInsets.only(top: 5,right: 5,left: 10),
-                                                      child: CircleAvatar(
-                                                          radius: 30,
-                                                          backgroundColor: Colors.transparent,
-                                                          backgroundImage: AssetImage(
-                                                            "assets/images/bmw.png",
-                                                          )),
-                                                    )
-                                                  ],
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  child: Text("عمله رائع",
-                                                    style: TextStyle(
-                                                        fontSize: 14, color: Colors.black),textAlign: TextAlign.center,),
-                                                ),
-
-                                              ],
-                                            ),
-                                          ),
-                                        );
+                                StreamBuilder<QuerySnapshot<Map<String, dynamic>>>( // inside the <> you enter the type of your stream
+                                  stream: FirebaseFirestore.instance.collection("Elwrash").doc(widget.warshaKey).collection("coments").snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData && snapshot.data != null) {
+                                      if(snapshot.data!.docs.length == 0){
+                                        virtcaldivhight = 1;
+                                      }else{
+                                        virtcaldivhight = snapshot.data!.docs.length;
 
                                       }
-                                  ),
+                                      BlocProvider.of<ElwarshaInfoCubit>(context).emit(ElwarshaInfoInitial());
+                                      return Container(
+                                        width: myApplication.widthClc(300, context),
+                                        child: snapshot.data!.docs.length != 0
+                                            ? ListView.builder(
+                                            physics: NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                          itemCount: snapshot.data!.docs.length,
+                                            itemBuilder:(context,index){
+                                              return  Padding(
+                                                padding:  EdgeInsets.symmetric(vertical: 10),
+                                                child: Container(
+                                                  width: myApplication.widthClc(300, context),
+                                                  padding: EdgeInsetsDirectional.all(5),
+                                                  decoration: BoxDecoration(
+                                                    // color: Colors.black,
+                                                    border: Border.all(color: Colors.black),
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        children: [
+                                                          Text(snapshot.data!.docs[index].get("name"),
+                                                              style:
+                                                              TextStyle(fontSize: 16, color: mycolors.secod_color)),
+                                                          Container(
+                                                            padding: EdgeInsets.only(top: 5,right: 5,left: 10),
+                                                            child: CircleAvatar(
+                                                                radius: 30,
+                                                                backgroundColor: Colors.grey,
+                                                                child: ClipOval(
+                                                                  child: snapshot.data!.docs[index].get("url") != null
+                                                                      ? Image.network(
+                                                                    snapshot.data!.docs[index].get("url"),
+                                                                    fit: BoxFit.cover,
+
+                                                                  )
+                                                                      : Icon(Icons.person,size: myApplication.widthClc(30, context),),
+                                                                ),),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Container(
+                                                        padding: EdgeInsets.all(10),
+                                                        child: Text(snapshot.data!.docs[index].get("comment"),
+                                                          style: TextStyle(
+                                                              fontSize: 14, color: Colors.black),textAlign: TextAlign.center,),
+                                                      ),
+
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+
+                                            }
+                                        )
+                                            : Container(
+                                          height: myApplication.hightClc(150, context),
+                                              child: Center(
+                                          child: Text(
+                                              "لا توجد تعليقات",style: TextStyle(fontSize: myApplication.widthClc(20, context)),
+                                          ),
+                                        ),
+                                            )
+                                      );
+                                    }else if (snapshot.hasError) {
+                                      return const Text('Error');
+                                    } else {
+                                      return const CircularProgressIndicator();
+                                    }
+                                  },
                                 ),
                               ],
                             ),
                             SizedBox(width: myApplication.widthClc(10, context),),
                             Container(
-                              height: 300,
+                              height:virtcaldivhight * myApplication.hightClc(180, context),
                                 child: VerticalDivider(thickness: 5, color: Colors.black, width: 5,)),
                           ],
                         ),
@@ -281,7 +318,9 @@ class _Elwarsha_profileState extends State<Elwarsha_profile> {
             floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
             floatingActionButton: FloatingActionButton.large(
               backgroundColor: mycolors.popColor,
-            onPressed: (){},
+            onPressed: (){
+                myApplication.comentdialog(context, widget.warshaKey);
+            },
           child: Text("إضافة تعليق",style: TextStyle(fontSize: myApplication.widthClc(14, context)),),
         ),
         );

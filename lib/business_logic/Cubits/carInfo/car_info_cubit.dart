@@ -30,7 +30,7 @@ class CarInfoCubit extends Cubit<CarInfoState> {
 
   static String? agency ;
 
-  CarInfoCubit() : super(CarInfoLoading());
+  CarInfoCubit() : super(CarInfoInitial());
   Future<void>setInfo({required  Car,required Model,required EnginCap,required EnginPow,required StructType,required agency}) async {
     try{
       await ffire.collection('customers').doc(userKey).collection("car").doc("data").set({
@@ -63,18 +63,19 @@ class CarInfoCubit extends Cubit<CarInfoState> {
     }
   }
 
-  Future<void>getInfo() async {
+  Future<void>getInfo(carkey) async {
     try{
-      await ffire.collection('customers').doc(userKey).collection("car").doc("data").get().then((DocumentSnapshot  value){
+      emit(CarInfoLoading());
+      await ffire.collection('customers').doc(carkey).collection("car").doc("data").get().then((DocumentSnapshot  value){
         print('Car data: ${value.data()}');
         Info = value.data() as Map<String, dynamic>;
       }).then((value){
-        Car = Info!["car"];
-         Model = Info!["model"];
-         EnginCap = Info!["enginCap"];
-         EnginPow = Info!["enginPow"];
-         StructType = Info!["structType"];
-         agency = Info!["agency"];
+        Car = Info!["car"] ?? " ";
+         Model = Info!["model"] ?? " ";
+         EnginCap = Info!["enginCap"] ?? " ";
+         EnginPow = Info!["enginPow"] ?? " ";
+         StructType = Info!["structType"] ?? " ";
+         agency = Info!["agency"] ?? false;
 
       });
 
@@ -85,9 +86,9 @@ class CarInfoCubit extends Cubit<CarInfoState> {
     }
 
   }
-  Future<void>getAgencyInfo() async {
+  Future<void>getAgencyInfo(carkey) async {
     try{
-      await ffire.collection('customers').doc(userKey).collection("car").doc("agency").get().then((DocumentSnapshot  value){
+      await ffire.collection('customers').doc(carkey).collection("car").doc("agency").get().then((DocumentSnapshot  value){
         print('Agncy data: ${value.data()}');
         agencyInfo = value.data() as Map<String, dynamic>;
       });

@@ -40,14 +40,17 @@ class CarInfo extends StatefulWidget { const CarInfo( {Key? key, this.isregerste
 class _CarInfoState extends State<CarInfo> {
   final formkey = GlobalKey<FormState>();
 
-  // ignore: non_constant_identifier_names
-  final BranchName = TextEditingController();
 
-  // ignore: non_constant_identifier_names
-  final BranchAddress = TextEditingController();
+  @override
+  void initState() {
+    if(!widget.isregerster){
+      BlocProvider.of<CarInfoCubit>(context).getInfo(userKey);
+      BlocProvider.of<CarInfoCubit>(context).getAgencyInfo(userKey);
+    }
+    super.initState();
+  }
 
-  // ignore: non_constant_identifier_names
-  final BranchNumber = TextEditingController();
+
 
   saveCarInfo() async {
       BlocProvider.of<CarInfoCubit>(context).setInfo(
@@ -57,18 +60,13 @@ class _CarInfoState extends State<CarInfo> {
           EnginPow: CarInfoCubit.EnginPow,
           StructType: CarInfoCubit.StructType,
           agency: CarInfoCubit.agency);
-      BlocProvider.of<CarInfoCubit>(context).getInfo();
+      BlocProvider.of<CarInfoCubit>(context).getInfo(userKey);
 
   }
 
   late String pic = "assets/images/car.png";
 
-  @override
-  void initState() {
-      BlocProvider.of<CarInfoCubit>(context).getInfo();
-      BlocProvider.of<CarInfoCubit>(context).getAgencyInfo();
-    super.initState();
-  }
+
 
   infoLoading(){
     return Container(
@@ -127,16 +125,17 @@ class _CarInfoState extends State<CarInfo> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: mycolors.first_color,
-            leading: IconButton(
+            leading: !widget.isregerster ? IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
               icon: Icon(
-                Icons.arrow_back_ios_new_sharp,
+                Icons.arrow_back_ios_new,
                 color: mycolors.secod_color,
-                size: 30,
               ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
+            ) : Container(),
             title: const Text(
-              'الورشة',
+              'سيارتى',
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -149,10 +148,10 @@ class _CarInfoState extends State<CarInfo> {
             color: mycolors.secod_color ,
             backgroundColor: mycolors.secod_color.withOpacity(0),
             onRefresh: ()async{
-              if(await myApplication.checkInternet()==true) {
+              if(await myApplication.checkInternet()==true && !widget.isregerster) {
                 await BlocProvider.of<CarInfoCubit>(context).Loading();
-                await BlocProvider.of<CarInfoCubit>(context).getInfo();
-                await BlocProvider.of<CarInfoCubit>(context).getAgencyInfo();
+                await BlocProvider.of<CarInfoCubit>(context).getInfo(userKey);
+                await BlocProvider.of<CarInfoCubit>(context).getAgencyInfo(userKey);
               }
               },
             child: BlocBuilder<CarInfoCubit, CarInfoState>(
@@ -175,12 +174,12 @@ class _CarInfoState extends State<CarInfo> {
                         children: [
                           Container(
                             margin:
-                            const EdgeInsets.only(left: 30, right: 30, top: 25),
+                             EdgeInsets.only(left: myApplication.widthClc(30, context), right: myApplication.widthClc(30, context), top: myApplication.hightClc(25, context)),
                             child: Column(
                               children: [
                                 SizedBox(
-                                    height: 190,
-                                    width: 340,
+                                    height: myApplication.hightClc(190, context),
+                                    width: myApplication.widthClc(340, context),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(30),
                                       child: Image.asset(pic),
@@ -189,8 +188,8 @@ class _CarInfoState extends State<CarInfo> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    const SizedBox(
-                                      height: 20,
+                                     SizedBox(
+                                      height: myApplication.hightClc(20, context),
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
@@ -536,7 +535,7 @@ class _CarInfoState extends State<CarInfo> {
                                                     "agencyAddress": "",
                                                     "agencyPhone": "",
                                                   });
-                                              BlocProvider.of<CarInfoCubit>(context).getAgencyInfo();
+                                              BlocProvider.of<CarInfoCubit>(context).getAgencyInfo(userKey);
 
                                             }),
                                         const SizedBox(
@@ -589,12 +588,11 @@ class _CarInfoState extends State<CarInfo> {
                                   backgroundColor: Colors.white),
                               onPressed: () {
                                 saveCarInfo();
-                                BlocProvider.of<CarInfoCubit>(context).getInfo();
+                                BlocProvider.of<CarInfoCubit>(context).getInfo(userKey);
                                 myApplication.keyboardFocus(context);
                                 if(widget.isregerster!=null){
                                   showTopSnackBar(Overlay.of(context),
                                       MySnackBar.success(message: "تم الحفظ"));
-                                  Navigator.pop(context);
                                 }else{
                                   myApplication.navigateToRemove(
                                       context, const MainScreen());

@@ -16,7 +16,10 @@ import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/imageLabeling/image_labling_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/map_Picker/map_picker_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/nav_bar/bottom_nav_bar_cubit.dart';
+import 'package:elwarsha/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -32,13 +35,26 @@ import 'global/global.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  CahchHelper.init();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseMessaging.instance.requestPermission();
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print("Token :$fcmToken");
+  FirebaseMessaging.onBackgroundMessage((message) async{
+    print(message.notification!.title);
+    print(message.notification!.body);
+
+  });
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  await CahchHelper.init();
   final Prefs = await SharedPreferences.getInstance();
   userKey = Prefs.getString("userKey");
   final showHome = Prefs.getBool('showHome') ?? false;
   final signMethod = Prefs.getString('signMethod') ?? "";
-  role = Prefs.getString('role') ?? "";
+  Role = Prefs.getString('role') ?? "";
   elwarshaState = false;
   stordimagePath = Prefs.getString("image") ?? null;
   SignedIn = CahchHelper.getData(key: "signedIn") ?? false;
@@ -74,8 +90,6 @@ class Elwarsha extends StatelessWidget {
         BlocProvider(create: (context) => ImageLablingCubit()),
         BlocProvider(create: (context) => RoleCubit()),
         BlocProvider(create: (context) => ElwarshaInfoCubit()),
-
-
 
       ],
       child: MaterialApp(

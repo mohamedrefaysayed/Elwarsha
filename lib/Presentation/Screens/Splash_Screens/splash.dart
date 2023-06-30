@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
             myApplication.navigateToRemove(context,  verfyEmailPage());
 
           }else{
-            myApplication.navigateToRemove(context,  LoginScreen());
+            myApplication.navigateToRemove(context,  MainScreen());
 
           }
         }else{

@@ -78,11 +78,19 @@ class RegisterScreen extends StatelessWidget {
                 load = true;
               } else if (state is RegisterSuccess) {
                 showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
-                load = false;
-                customreg
-                ? (RoleCubit.role == "سائق سيارة" ? myApplication.navigateToRemove(context, CarInfo())
-                    : (RoleCubit.role == "صاحب ورشة" ? myApplication.navigateToRemove(context, elwarshaInfo(isregerster: true,)) : myApplication.navigateToRemove(context, Sane3yData())) )
-                : myApplication.navigateToRemove(context, verfyEmailPage(name: name.text, email: email.text,));
+                if(customreg){
+                  if(RoleCubit.role == "سائق سيارة"){
+                    myApplication.navigateToRemove(context, CarInfo(isregerster: true,));
+                  }else if(RoleCubit.role == "صاحب ورشة"){
+                      myApplication.navigateToRemove(context, elwarshaInfo(isregerster: true,));
+                    }else{
+                    myApplication.navigateToRemove(context, Sane3yData());
+                  }
+
+                }else{
+                  myApplication.navigateToRemove(context, verfyEmailPage(name: name.text, email: email.text,));
+                }
+
               } else if (state is RegisterFailuer) {
                 showTopSnackBar(Overlay.of(context),
                     CustomSnackBar.error(message: state.errormessage));

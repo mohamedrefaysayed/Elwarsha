@@ -1,7 +1,10 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elwarsha/Helper/MyApplication.dart';
+import 'package:elwarsha/Presentation/Screens/profile/Elwarsha_profile.dart';
+import 'package:elwarsha/global/global.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -104,24 +107,65 @@ MapCubit() : super(MapInitial());
      if(markers!={}) {
        removeMarkers();
      }
-     if(WorkShopsCoordinates!=null) {
-      for (LatLng coordinate in WorkShopsCoordinates) {
-        final Uint8List markerIcon = await getBytesFromAsset(
-            "assets/images/workstation.png", 100);
-        final Marker marker = Marker(
-          icon: BitmapDescriptor.fromBytes(markerIcon),
-          markerId: MarkerId(coordinate.toString()),
-          position: coordinate,
-          infoWindow: InfoWindow(title: "ورشة", snippet: ""),
-          onTap: () {
-            myApplication.markerDialog(context,coordinate.latitude,coordinate.longitude,position!.latitude,position!.longitude,(){});
-          },
-        );
-        markers.add(marker);
 
-      }
-      emit(MapInitial());
-    }
+     final Uint8List markerIcon = await getBytesFromAsset(
+         "assets/images/workstation.png", 100);
+
+       await ffire.collection('Elwrash').get().then((value){
+
+         GeoPoint? location;
+
+
+
+         value.docs.forEach((element) async{
+
+
+
+
+             location = element["warshalocation"];
+
+
+             LatLng coordinate = LatLng(location!.latitude, location!.longitude);
+
+             final Marker marker = Marker(
+               icon: BitmapDescriptor.fromBytes(markerIcon),
+               markerId: MarkerId(coordinate.toString()),
+               position: LatLng(location!.latitude, location!.longitude),
+               infoWindow: InfoWindow(title: "ورشة : "+element["warshaName"], snippet: ""),
+               onTap: () {
+                 myApplication.markerDialog(context,coordinate.latitude,coordinate.longitude,MapCubit.position!.latitude,MapCubit.position!.longitude,
+                         (){
+                       Navigator.pop(context);
+                       myApplication.navigateTo(Elwarsha_profile(element["warshaKey"]), context);
+                     }
+                 );
+               },
+             );
+             MapCubit.markers.add(marker);
+
+           emit(MapInitial());
+
+         });
+
+       });
+
+
+    //    for (LatLng coordinate in WorkShopsCoordinates) {
+    //     final Uint8List markerIcon = await getBytesFromAsset(
+    //         "assets/images/workstation.png", 100);
+    //     final Marker marker = Marker(
+    //       icon: BitmapDescriptor.fromBytes(markerIcon),
+    //       markerId: MarkerId(coordinate.toString()),
+    //       position: coordinate,
+    //       infoWindow: InfoWindow(title: "ورشة", snippet: ""),
+    //       onTap: () {
+    //         myApplication.markerDialog(context,coordinate.latitude,coordinate.longitude,position!.latitude,position!.longitude,(){});
+    //       },
+    //     );
+    //     markers.add(marker);
+    //
+    //   emit(MapInitial());
+    // }
   }
    addSparePMarkers(BuildContext context) async {
     if(markers!={}) {

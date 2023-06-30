@@ -53,7 +53,7 @@ class _MainScreenState extends State<MainScreen>
       ),
       bottomNavigationBar: BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
         builder: (context, state) {
-          return role == "سائق سيارة" ? CurvedNavigationBar(
+          return Role == "سائق سيارة" ? CurvedNavigationBar(
             animationCurve: Curves.ease,
             animationDuration: const Duration(milliseconds: 500),
             index: BottomNavBarCubit.selectedIndex,

@@ -3,10 +3,12 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elwarsha/Helper/MY_SnackBar.dart';
+import 'package:elwarsha/Presentation/Screens/Map/requests.dart';
 import 'package:elwarsha/Presentation/Screens/profile/Elwarsha_profile.dart';
 import 'package:elwarsha/business_logic/Cubits/Map/map_cubit.dart';
 import 'package:elwarsha/Ai/imageLabeling.dart';
 import 'package:elwarsha/business_logic/Cubits/elwarsha_Info/elwarsha_info_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -35,12 +37,15 @@ class _MyMapState extends State<MyMap>
 
   bool? checkinternet;
 
+  bool searchR = false;
+
 
   @override
   initState() {
     super.initState();
     MapCubit.isloaded = true;
     BlocProvider.of<MapCubit>(context).getMyCurrentLocation();
+    BlocProvider.of<GetInfoCubit>(context).getInfo();
   }
 
   // ignore: non_constant_identifier_names
@@ -295,7 +300,7 @@ class _MyMapState extends State<MyMap>
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           centerTitle: true,
-          title: role == "سائق سيارة"
+          title: Role == "سائق سيارة"
               ? SizedBox(
                   height: myApplication.hightClc(70, context),
                   child: Padding(
@@ -360,38 +365,44 @@ class _MyMapState extends State<MyMap>
                             prefixIcon: Icon(
                               Icons.search,
                               color: mycolors.secod_color,
-                              size: 30,
+                              size: myApplication.widthClc(30, context),
                             ),
                             closeSearchOnSuffixTap: true,
-                            width: 290,
+                            width: myApplication.widthClc(290, context),
                             textController: searchcontroller,
                             onSuffixTap: () {
                                 searchcontroller.clear();
                                 BlocProvider.of<MapCubit>(context).emit(MapInitial());
                             },
                             onSubmitted: (searchvalue) async {
+
+                              final Uint8List markerIcon = await getBytesFromAsset(
+                                  "assets/images/workstation.png", 100);
+
                               await ffire.collection('Elwrash').get().then((value){
 
                                 GeoPoint? location;
 
 
+
                                 value.docs.forEach((element) async{
 
                                   if(element["warshaName"] == searchvalue){
+                                    searchR = true;
 
                                     location = element["warshalocation"];
                                     _GoogelMapController!.animateCamera(CameraUpdate.newLatLng(
                                         LatLng(location!.latitude, location!.longitude)
                                     ));
-                                    print("موجود");
+
 
                                     LatLng coordinate = LatLng(location!.latitude, location!.longitude);
 
                                     final Marker marker = Marker(
-                                      icon: BitmapDescriptor.defaultMarker,
+                                      icon: BitmapDescriptor.fromBytes(markerIcon),
                                       markerId: MarkerId(coordinate.toString()),
                                       position: LatLng(location!.latitude, location!.longitude),
-                                      infoWindow: InfoWindow(title: searchvalue, snippet: ""),
+                                      infoWindow: InfoWindow(title: "ورشة : "+element["warshaName"], snippet: ""),
                                       onTap: () {
                                         myApplication.markerDialog(context,coordinate.latitude,coordinate.longitude,MapCubit.position!.latitude,MapCubit.position!.longitude,
                                                 (){
@@ -402,17 +413,20 @@ class _MyMapState extends State<MyMap>
                                       },
                                     );
                                     MapCubit.markers.add(marker);
-
-
-
-                                  }else{
-                                    print("مش موجود");
-
-                                    myApplication.showToast(text: "لا يوجد نتيجة", color: mycolors.secod_color);
                                   }
                                 });
 
                               });
+
+                              if(searchR){
+                                print("موجود");
+
+                              }else{
+                                print("مش موجود");
+
+                                myApplication.showToast(text: "لا يوجد نتيجة", color: mycolors.secod_color);
+                              }
+                              searchR = false;
                               BlocProvider.of<MapCubit>(context).emit(MapInitial());
                             },
                           ),
@@ -486,7 +500,7 @@ class _MyMapState extends State<MyMap>
                               BlocProvider.of<MapCubit>(context).endloading();
                             },
                           ) ,
-                          role == "سائق سيارة"
+                          Role == "سائق سيارة"
                               ? Container(
                                   padding: EdgeInsets.only(
                                       top: 100, left: 20, right: 20),
@@ -503,10 +517,8 @@ class _MyMapState extends State<MyMap>
                                           ),
                                           child: IconButton(
                                               onPressed: () {
-                                                _GoogelMapController!
-                                                    .animateCamera(
-                                                        CameraUpdate.zoomTo(
-                                                            14));
+                                                _goToMyCurrentLocation();
+
                                                 BlocProvider.of<MapCubit>(
                                                         context)
                                                     .removeMarkers();
@@ -570,7 +582,7 @@ class _MyMapState extends State<MyMap>
                                 )
                               : Container(),
 
-                          role == "سائق سيارة"
+                          Role == "سائق سيارة"
                           ? isinrequestmode
                               ? const SizedBox()
                               : Align(
@@ -611,14 +623,24 @@ class _MyMapState extends State<MyMap>
                           : Align(
                             alignment: Alignment.bottomLeft,
                             child: Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 105.0, left: 20),
+                              padding:  EdgeInsets.only(
+                                  bottom: myApplication.hightClc(105, context), left: myApplication.widthClc(20, context)),
                               child: FloatingActionButton.extended(
                                 heroTag: "repairrequest",
                                 backgroundColor: elwarshaState! ? mycolors.Floatcolor : mycolors.popColor,
                                 onPressed: () {
-                                  myApplication.navigateTo(
-                                      const Repair_Request(), context);
+
+                                  showModalBottomSheet(
+                                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                      shape: RoundedRectangleBorder(
+
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+
+                                      context: context,
+                                      builder: (BuildContext context){
+                                        return requests();
+                                      });
                                 },
                                 label: Row(
                                   children: [
@@ -659,7 +681,7 @@ class _MyMapState extends State<MyMap>
                                 )
                               : SizedBox(),
 
-                          (elwarshaState! || role == "سائق سيارة") ? Container() : myApplication.elwarshaOffline(context)
+                          (elwarshaState! || Role == "سائق سيارة") ? Container() : myApplication.elwarshaOffline(context)
                         ],
                       )
                     : myApplication.noInternet(context)
@@ -711,7 +733,7 @@ class _MyMapState extends State<MyMap>
                       ],
                     ),
                   ),
-        floatingActionButton: (elwarshaState! || role == "سائق سيارة") ? Padding(
+        floatingActionButton: (elwarshaState! || Role == "سائق سيارة") ? Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width / 100),
           child: Column(

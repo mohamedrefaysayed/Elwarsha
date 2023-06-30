@@ -83,7 +83,7 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
       child: Scaffold(
         backgroundColor: mycolors.first_color,
         appBar: AppBar(
-          leading: IconButton(
+          leading: !widget.isregerster ? IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
@@ -91,7 +91,7 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
               Icons.arrow_back_ios_new,
               color: mycolors.secod_color,
             ),
-          ),
+          ) : Container(),
           elevation: 0,
           backgroundColor: mycolors.first_color,
           title: Text(
@@ -130,7 +130,7 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
                     color: mycolors.first_color,
                     child: ListView(
                       children: [
-                         SizedBox(
+                        SizedBox(
                           height: myApplication.hightClc(50, context),
                         ),
                         Container(
@@ -147,7 +147,7 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
                                         ElwarshaInfoCubit.warshaName = val;
                                       },
                                       initialValue:
-                                          ElwarshaInfoCubit.warshaName ?? "",
+                                      ElwarshaInfoCubit.warshaName ?? "",
                                       keyboardType: TextInputType.text,
                                       textAlign: TextAlign.end,
                                       validator: (value) {
@@ -159,16 +159,16 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
                                       },
                                       decoration: InputDecoration(
                                         contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 5, horizontal: 10),
+                                        const EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 10),
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          BorderRadius.circular(10.0),
                                         ),
                                         focusedBorder:
-                                            const OutlineInputBorder(),
+                                        const OutlineInputBorder(),
                                         hintText: 'أدخل اسم الورشة',
                                       ),
                                     ),
@@ -199,7 +199,7 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
                                       },
                                       initialValue: ElwarshaInfoCubit.warshlicense ?? "",
                                       keyboardType:
-                                          TextInputType.number,
+                                      TextInputType.number,
                                       textAlign: TextAlign.end,
                                       validator: (value) {
                                         if (value!.isEmpty) {
@@ -210,16 +210,16 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
                                       },
                                       decoration: InputDecoration(
                                         contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 5, horizontal: 10),
+                                        const EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 10),
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          BorderRadius.circular(10.0),
                                         ),
                                         focusedBorder:
-                                            const OutlineInputBorder(),
+                                        const OutlineInputBorder(),
                                         hintText: 'أدخل رقم الترخيص',
                                       ),
                                     ),
@@ -261,41 +261,41 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
                                         builder: (context, state) {
                                           return MapPickerCubit.isloading
                                               ? Container(
-                                                  height: 25,
-                                                  width: 25,
-                                                  child: myApplication
-                                                      .myloading(context),
-                                                )
+                                            height: 25,
+                                            width: 25,
+                                            child: myApplication
+                                                .myloading(context),
+                                          )
                                               : ElwarshaInfoCubit.warshaLocation != null
-                                                  ? Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Icon(
-                                                          Icons.check,
-                                                          color: mycolors
-                                                              .secod_color,
-                                                        ),
-                                                        Text(
-                                                          "تم الاختيار",
-                                                          style: TextStyle(
-                                                              color: mycolors
-                                                                  .secod_color,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  : Text(
-                                                      "اختر الموقع",
-                                                      style: TextStyle(
-                                                          color: mycolors
-                                                              .titleFont,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    );
+                                              ? Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceEvenly,
+                                            children: [
+                                              Icon(
+                                                Icons.check,
+                                                color: mycolors
+                                                    .secod_color,
+                                              ),
+                                              Text(
+                                                "تم الاختيار",
+                                                style: TextStyle(
+                                                    color: mycolors
+                                                        .secod_color,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .bold),
+                                              ),
+                                            ],
+                                          )
+                                              : Text(
+                                            "اختر الموقع",
+                                            style: TextStyle(
+                                                color: mycolors
+                                                    .titleFont,
+                                                fontWeight:
+                                                FontWeight.bold),
+                                          );
                                         },
                                       ),
                                     ),
@@ -395,15 +395,15 @@ class _elwarshaInfoState extends State<elwarshaInfo> {
                                           .warshDesc!.length
                                           .toString() : "0",
                                       counterStyle:
-                                          TextStyle(color: Colors.white),
+                                      TextStyle(color: Colors.white),
                                       contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 5, horizontal: 10),
+                                      const EdgeInsets.symmetric(
+                                          vertical: 5, horizontal: 10),
                                       filled: true,
                                       fillColor: Colors.white,
                                       border: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        BorderRadius.circular(10.0),
                                       ),
                                       focusedBorder: const OutlineInputBorder(),
                                       hintText: '..... أدخل الوصف',

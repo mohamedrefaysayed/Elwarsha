@@ -2,9 +2,11 @@
 
 import 'package:elwarsha/Constents/fontsize.dart';
 import 'package:elwarsha/Helper/MY_SnackBar.dart';
+import 'package:elwarsha/Helper/chach_helper.dart';
 import 'package:elwarsha/Presentation/Screens/Main_Screen/MainScreen.dart';
 import 'package:elwarsha/business_logic/Cubits/Login/login_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/Passwors_Obscure/pass_op_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,6 +65,17 @@ class LoginScreen extends StatelessWidget {
                 showTopSnackBar(Overlay.of(context),
                     MySnackBar.success(message: "تم تسجيل الدخول بنجاح"));
                 myApplication.navigateToRemove(context, MainScreen());
+
+                String signmethod = CahchHelper.getData(key: "signMethod");
+
+                if(signmethod == "normal"){
+
+                  BlocProvider.of<GetInfoCubit>(context).getInfo();
+                  print(GetInfoCubit.Info);
+                  CahchHelper.saveData(key: "role", value: GetInfoCubit.Info!["role"]);
+                }
+
+                Role = GetInfoCubit.Info!["role"];
               } else if (state is LoginFailure) {
                 showTopSnackBar(Overlay.of(context),
                     MySnackBar.error(message: state.errormessage));
@@ -149,9 +162,8 @@ class LoginScreen extends StatelessWidget {
                               ),
                               SizedBox(
                                 height: myApplication.hightClc(84, context),
-                                child: BlocConsumer<PassOpCubit, PassOpState>(
-                                  listener: (context, state) {
-                                  },
+                                child: BlocBuilder<PassOpCubit, PassOpState>(
+
                                   builder: (context, state) => TextFormField(
                                     controller: password,
                                     textAlign: TextAlign.end,

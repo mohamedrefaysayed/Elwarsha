@@ -1,5 +1,7 @@
 // ignore: file_names
 import 'dart:async';
+import 'package:elwarsha/Presentation/Screens/Info/Elwarsha_Info.dart';
+import 'package:elwarsha/Presentation/Screens/Info/Sane3y_Data.dart';
 import 'package:elwarsha/business_logic/Cubits/Verfy_email/verifyemail_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,8 +44,21 @@ class _verfyEmailPageState extends State<verfyEmailPage> {
       BlocProvider.of<VerifyemailCubit>(context).sendvervEmail();
 
       timer = Timer.periodic(
-        const Duration(seconds: 3),
-        (_) => BlocProvider.of<VerifyemailCubit>(context).checkemailvervy(),
+
+          const Duration(seconds: 3),
+        (_) {
+            BlocProvider.of<VerifyemailCubit>(context).checkemailvervy();
+
+            if(VerifyemailCubit.isEmailverified){
+              if(Role == "سائق سيارة"){
+                myApplication.navigateToRemove(context, CarInfo(isregerster: true,));
+              }else if(Role == "صاحب ورشة"){
+                myApplication.navigateToRemove(context, elwarshaInfo(isregerster: true,));
+              }else{
+                myApplication.navigateToRemove(context, Sane3yData());
+              }
+            }
+          }
       );
     }
   }
@@ -62,12 +77,12 @@ class _verfyEmailPageState extends State<verfyEmailPage> {
     myApplication.navigateToRemove(context, LoginScreen()) ;
   }
 
+
+
   @override
   Widget build(BuildContext context) => BlocBuilder<VerifyemailCubit, VerifyemailState>(
   builder: (context, state) {
-    return VerifyemailCubit.isEmailverified
-        ? CarInfo()
-        : Scaffold(
+    return Scaffold(
             appBar: AppBar(
               elevation: 0,
               backgroundColor: mycolors.first_color,
