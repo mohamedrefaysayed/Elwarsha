@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:elwarsha/Helper/chach_helper.dart';
+import 'package:elwarsha/Helper/cahch_helper.dart';
 import 'package:elwarsha/business_logic/Cubits/role/role_cubit.dart';
 import 'package:elwarsha/global/global.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,8 +25,6 @@ class RegisterCubit extends Cubit<RegisterState> {
         await prefs.setString("signMethod", "normal");
         await prefs.setString("role",RoleCubit.role!);
         await CahchHelper.saveData(key: "signedIn", value: true);
-
-
         userKey = await prefs.getString("userKey");
         ffire.collection("customers").doc(userKey).set({
           "name": name,
@@ -48,9 +46,9 @@ class RegisterCubit extends Cubit<RegisterState> {
       }
     }catch(e){
       emit(RegisterFailuer(errormessage: e.toString()));
-
     }
   }
+
   Future<void>SignupGoogelUser(context) async {
     try {
       emit(RegisterLoading());

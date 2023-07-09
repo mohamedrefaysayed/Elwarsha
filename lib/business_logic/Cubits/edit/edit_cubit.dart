@@ -17,10 +17,7 @@ class EditCubit extends Cubit<EditState> {
   static bool caneditName = true;
   static bool caneditEmail = true;
   static bool isUploading = false;
-  // static Alignment picAlignment = Alignment.center;
-  // String alignmentToString(Alignment alignment) {
-  //   return '${picAlignment.x},${picAlignment.y}';
-  // }
+
   String? url;
 
   EditCubit() : super(EditInitial());
@@ -37,18 +34,15 @@ class EditCubit extends Cubit<EditState> {
   final ImagePicker picker = ImagePicker();
 
 
-  Future getImage(ImageSource media, context) async {
-
+  Future getImage(ImageSource media,) async {
     XFile? selected = await picker.pickImage(source: media);
     if (selected != null) {
       image = File(selected.path);
       print("picked Image");
       await cropImage(imagefile: selected);
       emit(EditInitial());
-
     }
   }
-
   Future cropImage({required XFile imagefile})async{
     CroppedFile? croppedImage = await ImageCropper().cropImage(sourcePath: imagefile.path,
         uiSettings: [
@@ -69,7 +63,6 @@ class EditCubit extends Cubit<EditState> {
     image =  File(croppedImage.path);
 
   }
-
   Future uploadImage(context) async {
     isUploading = true;
     emit(EditInitial());
@@ -83,7 +76,6 @@ class EditCubit extends Cubit<EditState> {
     await Prefs.setString("image", "${image!.path}");
     isUploading = false;
     image = null;
-
     emit(EditInitial());
 
   }
@@ -91,10 +83,7 @@ class EditCubit extends Cubit<EditState> {
     await ffire.collection("customers").doc(userKey).update({
       "url": url,
     });
-
     emit(EditInitial());
-
-
   }
 
   // setAlign(details){

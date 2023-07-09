@@ -63,7 +63,6 @@ class RegisterScreen extends StatelessWidget {
           title: Text(
             'إنشاء حساب',
             style: TextStyle(
-              color: Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: myfonts.largfont,
             ),

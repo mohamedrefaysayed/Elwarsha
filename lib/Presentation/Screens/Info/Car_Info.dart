@@ -29,7 +29,8 @@ const List<String> EnginPowers = <String>[" ", '500', '1000', '900', '300'];
 // ignore: constant_identifier_names
 const List<String> StructureTypes = <String>[" ", 'سيدان', 'هاتشباك'];
 
-class CarInfo extends StatefulWidget { const CarInfo( {Key? key, this.isregerster,}) : super(key: key);
+class CarInfo extends StatefulWidget {
+  const CarInfo( {Key? key, required this.isregerster,}) : super(key: key);
 
   final isregerster;
 
@@ -590,9 +591,10 @@ class _CarInfoState extends State<CarInfo> {
                                 saveCarInfo();
                                 BlocProvider.of<CarInfoCubit>(context).getInfo(userKey);
                                 myApplication.keyboardFocus(context);
-                                if(widget.isregerster!=null){
+                                if(!widget.isregerster){
                                   showTopSnackBar(Overlay.of(context),
                                       MySnackBar.success(message: "تم الحفظ"));
+                                  Navigator.pop(context);
                                 }else{
                                   myApplication.navigateToRemove(
                                       context, const MainScreen());

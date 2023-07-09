@@ -7,6 +7,7 @@ import 'package:elwarsha/Constents/colors.dart';
 import 'package:elwarsha/Constents/fontsize.dart';
 import 'package:elwarsha/Presentation/Screens/auth/Reset_Password.dart';
 import 'package:elwarsha/business_logic/Cubits/Map/map_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/addItem/add_item_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/carInfo/car_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/role/role_cubit.dart';
@@ -276,8 +277,10 @@ class myApplication {
   }
 
   static myloading(BuildContext context) {
-    return CircularProgressIndicator(
-      color: mycolors.secod_color,
+    return Container(
+      child: CircularProgressIndicator(
+        color: mycolors.secod_color,
+      ),
     );
   }
 
@@ -393,6 +396,61 @@ class myApplication {
       context: context,
     ).show();
   }
+  static reviwedialog(context, dockey,doctype,) {
+
+    String? comment;
+
+    AwesomeDialog(
+      padding: const EdgeInsets.all(30),
+      dialogType: DialogType.noHeader,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+
+          Text("اضف تعليقا",style: TextStyle(color: Colors.white,fontSize: myfonts.mediumfont),),
+          const SizedBox(height: 30,),
+          TextFormField(
+            maxLines: null,
+            textAlign: TextAlign.end,
+            style: const TextStyle(color: Colors.white),
+            onChanged: (val) {
+              comment = val;
+            },
+            strutStyle: StrutStyle.disabled,
+            decoration: InputDecoration(
+            ),
+          ),
+          const SizedBox(height: 30,),
+        ],
+      ),
+      btnOkOnPress: () async{
+        showTopSnackBar(
+            Overlay.of(context), MySnackBar.success(message: "تم الحفظ"));
+        myApplication.keyboardFocus(context);
+
+        await ffire.collection("spareStore").doc(doctype).collection("data").doc(dockey).collection("comments").doc(DateTime.now().toString()).set(
+            {
+              "name" : GetInfoCubit.Info!["name"],
+              "url" : GetInfoCubit.Info!["url"],
+              "comment" : comment,
+
+            }
+        );
+        print("added!");
+
+
+
+      },
+      btnOkColor: mycolors.secod_color,
+      btnOkText: "حفظ",
+      btnCancelText: "الغاء",
+      btnCancelColor: mycolors.first_color,
+      btnCancelOnPress: (){},
+      dialogBackgroundColor: mycolors.popColor,
+      context: context,
+    ).show();
+  }
+
   static comentdialog(context, warshakey) {
 
     String? comment;
@@ -574,7 +632,7 @@ class myApplication {
       .show();
   }
 
-  static imageDialog(context) {
+  static imageDialog(context,imagetype) {
     AwesomeDialog(
       dialogType: DialogType.noHeader,
       dialogBackgroundColor: mycolors.popColor,
@@ -595,8 +653,11 @@ class myApplication {
               //if user click this button, user can upload image from gallery
               onPressed: () {
                 Navigator.pop(context);
-                BlocProvider.of<EditCubit>(context)
-                    .getImage(ImageSource.gallery, context);
+                imagetype == "prof"
+                ? BlocProvider.of<EditCubit>(context)
+                    .getImage(ImageSource.gallery)
+                : BlocProvider.of<AddItemCubit>(context)
+                    .getImage(ImageSource.gallery);
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -620,8 +681,11 @@ class myApplication {
               //if user click this button. user can upload image from camera
               onPressed: () {
                 Navigator.pop(context);
-                BlocProvider.of<EditCubit>(context)
-                    .getImage(ImageSource.camera, context);
+                imagetype == "prof"
+                ? BlocProvider.of<EditCubit>(context)
+                    .getImage(ImageSource.camera)
+                : BlocProvider.of<AddItemCubit>(context)
+                    .getImage(ImageSource.camera);
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -775,7 +839,9 @@ class myApplication {
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
       showTopSnackBar(Overlay.of(context),
-          const MySnackBar.error(message: "اضغط مره اخرى للخروج"));
+          const MySnackBar.error(message: "اضغط مره اخرى للخروج"),
+        displayDuration: Duration(milliseconds: 100),
+      );
       return Future.value(false);
     }
     return Future.value(true);

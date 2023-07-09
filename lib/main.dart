@@ -1,5 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
-import 'package:elwarsha/Helper/chach_helper.dart';
+import 'package:elwarsha/Helper/cahch_helper.dart';
 import 'package:elwarsha/Presentation/Screens/profile/Profile%20personly.dart';
 import 'package:elwarsha/business_logic/Cubits/Confirm_mail/confirm_mail_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/Login/login_cubit.dart';
@@ -9,9 +9,14 @@ import 'package:elwarsha/business_logic/Cubits/Passwors_Obscure/pass_op_cubit.da
 import 'package:elwarsha/business_logic/Cubits/Register/register_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/Team_Info/team_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/Verfy_email/verifyemail_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/addItem/add_item_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/archive/archive_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/carInfo/car_info_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/cart/cart_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/comments/comments_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/edit/edit_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/elwarsha_Info/elwarsha_info_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/fav/fav_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/imageLabeling/image_labling_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/map_Picker/map_picker_cubit.dart';
@@ -22,7 +27,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Presentation/Screens/Splash_Screens/splash.dart';
 import 'business_logic/Cubits/Payment/payment_cubit.dart';
@@ -90,33 +94,23 @@ class Elwarsha extends StatelessWidget {
         BlocProvider(create: (context) => ImageLablingCubit()),
         BlocProvider(create: (context) => RoleCubit()),
         BlocProvider(create: (context) => ElwarshaInfoCubit()),
+        BlocProvider(create: (context) => CartCubit()),
+        BlocProvider(create: (context) => FavCubit()),
+        BlocProvider(create: (context) => CommentsCubit()),
+        BlocProvider(create: (context) => AddItemCubit()),
+        BlocProvider(create: (context) => ArchiveCubit()),
 
       ],
       child: MaterialApp(
-          locale: const Locale('en'),
-          localizationsDelegates:  const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en'),
-            Locale('ar'),
-          ],
 
-
-          localeResolutionCallback: (deviceLocale, supportedLocales) {
-            for (var locale in supportedLocales) {
-              if (deviceLocale != null &&
-                  deviceLocale.languageCode == locale.languageCode) {
-                return deviceLocale;
-              }
-            }
-            return supportedLocales.first;
-             },
           debugShowCheckedModeBanner: false,
           themeAnimationCurve: Curves.ease,
           theme: ThemeData(
+            textTheme: TextTheme(
+              bodyLarge: TextStyle(color: Colors.white),
+              bodyMedium: TextStyle(color: Colors.white),
+              bodySmall: TextStyle(color: Colors.white),
+            ),
             primarySwatch: Colors.blueGrey,
             fontFamily: "Vazirmatn",
           ),

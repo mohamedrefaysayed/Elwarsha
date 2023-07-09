@@ -9,7 +9,7 @@ class mycolors {
   static Color secod_color = HexColor("#E09F3F");
   static Color popColor = HexColor("#193745");
   static Color Floatcolor = HexColor("#F6EDAD");
-  static Color fontColor = Colors.black;
+  static Color fontColor = Colors.white;
   static Color titleFont = Colors.white;
 
 

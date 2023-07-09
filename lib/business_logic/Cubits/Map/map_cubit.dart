@@ -107,33 +107,21 @@ MapCubit() : super(MapInitial());
      if(markers!={}) {
        removeMarkers();
      }
-
      final Uint8List markerIcon = await getBytesFromAsset(
          "assets/images/workstation.png", 100);
-
        await ffire.collection('Elwrash').get().then((value){
-
          GeoPoint? location;
-
-
-
          value.docs.forEach((element) async{
-
-
-
-
              location = element["warshalocation"];
-
-
              LatLng coordinate = LatLng(location!.latitude, location!.longitude);
-
              final Marker marker = Marker(
                icon: BitmapDescriptor.fromBytes(markerIcon),
                markerId: MarkerId(coordinate.toString()),
                position: LatLng(location!.latitude, location!.longitude),
                infoWindow: InfoWindow(title: "ورشة : "+element["warshaName"], snippet: ""),
                onTap: () {
-                 myApplication.markerDialog(context,coordinate.latitude,coordinate.longitude,MapCubit.position!.latitude,MapCubit.position!.longitude,
+                 myApplication.markerDialog(context,coordinate.latitude,
+                     coordinate.longitude,MapCubit.position!.latitude,MapCubit.position!.longitude,
                          (){
                        Navigator.pop(context);
                        myApplication.navigateTo(Elwarsha_profile(element["warshaKey"]), context);
@@ -142,9 +130,7 @@ MapCubit() : super(MapInitial());
                },
              );
              MapCubit.markers.add(marker);
-
            emit(MapInitial());
-
          });
 
        });

@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'package:elwarsha/Helper/MyApplication.dart';
 import 'package:flutter/material.dart';
 
 /// Popup widget that you can use by default to show some information
@@ -102,7 +102,7 @@ class MySnackBarState extends State<MySnackBar> {
     final theme = Theme.of(context);
     return Container(
       clipBehavior: Clip.hardEdge,
-      height: 60,
+      height: myApplication.hightClc(60, context),
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         borderRadius: widget.borderRadius,

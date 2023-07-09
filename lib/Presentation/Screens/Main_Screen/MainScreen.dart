@@ -1,15 +1,17 @@
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:elwarsha/Helper/MyApplication.dart';
+import 'package:elwarsha/Presentation/Screens/archive/archive.dart';
+import 'package:elwarsha/Presentation/Screens/fav/fav.dart';
+import 'package:elwarsha/Presentation/Screens/store/spareMain.dart';
+import 'package:elwarsha/Presentation/Screens/store/warshaitems.dart';
+import 'package:elwarsha/business_logic/Cubits/elwarsha_Info/elwarsha_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/nav_bar/bottom_nav_bar_cubit.dart';
 import 'package:elwarsha/global/global.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../Constents/colors.dart';
 import 'package:flutter/material.dart';
-import '../Info/Sane3y_Data.dart';
 import '../Map/Map.dart';
-import '../auth/Login_Screen.dart';
-import '../auth/Regester_Screen.dart';
 import '../profile/Profile personly.dart';
 
 class MainScreen extends StatefulWidget {
@@ -28,7 +30,9 @@ class _MainScreenState extends State<MainScreen>
     super.initState();
     BottomNavBarCubit.selectedIndex = 2;
     BottomNavBarCubit.tabController = TabController(length: 5, vsync: this,initialIndex: 2);
-
+    Role == "صاحب ورشة"
+        ? BlocProvider.of<ElwarshaInfoCubit>(context).getInfo(context, userKey)
+        : null;
   }
 
   @override
@@ -39,14 +43,25 @@ class _MainScreenState extends State<MainScreen>
       backgroundColor: mycolors.first_color,
       body: WillPopScope(
         onWillPop: () => myApplication.onWillPop(context),
-        child: TabBarView(
+        child: Role == "سائق سيارة" ? TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           controller: BottomNavBarCubit.tabController,
           children: [
-            LoginScreen(),
-            RegisterScreen(),
+            SpareMain(),
+            archive(),
             MyMap(),
-            const Sane3yData(),
+             Fav(),
+            const person_file(),
+          ],
+        )
+            : TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: BottomNavBarCubit.tabController,
+          children: [
+            warshaItems(),
+            archive(),
+            MyMap(),
+            Fav(),
             const person_file(),
           ],
         ),
@@ -140,6 +155,7 @@ class _MainScreenState extends State<MainScreen>
                   label: "صفحتى",
                   labelStyle: TextStyle(color: mycolors.secod_color)),
             ],
+
             color: mycolors.popColor,
             backgroundColor: Colors.transparent,
             buttonBackgroundColor: mycolors.popColor,

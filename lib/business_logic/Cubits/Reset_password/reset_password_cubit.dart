@@ -24,6 +24,7 @@ class ResetPasswordCubit extends Cubit<ResetPassowrdState> {
       }
     }
   }
+
   Future<void> change_email({required email}) async {
     cantsend = true;
     try {

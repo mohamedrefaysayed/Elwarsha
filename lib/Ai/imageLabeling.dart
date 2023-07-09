@@ -32,7 +32,6 @@ class _imagelabelingState extends State<imagelabeling> {
         return false;
         }
              return true;
-
       },
       child: Scaffold(
         backgroundColor: mycolors.first_color,

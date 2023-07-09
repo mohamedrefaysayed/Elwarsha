@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:elwarsha/Helper/chach_helper.dart';
+import 'package:elwarsha/Helper/cahch_helper.dart';
 import 'package:elwarsha/Presentation/Screens/Info/Elwarsha_Info.dart';
 import 'package:elwarsha/Presentation/Screens/Splash_Screens/splash.dart';
 import 'package:elwarsha/Presentation/Screens/profile/edit_Profile.dart';
@@ -169,11 +169,6 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                                     )),
                               ),
 
-
-                              // Text(GetInfoCubit.Info!['email'],
-                              //     style: TextStyle(
-                              //         fontSize: myfonts.mediumfont,
-                              //         fontWeight: FontWeight.bold,color: mycolors.fontColor,))
                             ]));
                   } else {
                     return Center(
@@ -364,26 +359,24 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                               context,
                               "هل تريد حذف الحساب ؟",
                               ()async{
-                                    if (fauth.currentUser != null) {
-                                      await fauth.currentUser!.delete();
-                                    };
+                                try{
+                                  if (fauth.currentUser != null) {
+                                    await fauth.currentUser!.delete();
+                                  };
+                                  if(Role == "صاحب ورشة"){
+                                    await ffire.collection("Elwrash").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
+                                  }
+                                  CahchHelper.clearData();
+                                  CahchHelper.saveData(key: "showHome", value: true);
 
+                                  SignedIn = false;
 
-                                    if(Role == "صاحب ورشة"){
-                                      await ffire.collection("Elwrash").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
-                                    }
-
-                                    CahchHelper.clearData();
-                                    CahchHelper.saveData(key: "showHome", value: true);
-
-                                    SignedIn = false;
-
-                                    myApplication.navigateToRemove(context, SplashScreen(showHome: true, signMethod: "normal"));
-                                await ffire.collection("customers").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
-
+                                  myApplication.navigateToRemove(context, SplashScreen(showHome: true, signMethod: "normal"));
+                                  await ffire.collection("customers").doc(userKey).delete().whenComplete(() => print("deleted")).onError((error, stackTrace) => print("error"));
+                                }catch(e){
+                                  showTopSnackBar(Overlay.of(context),MySnackBar.error(message: "قم بتسجيل الخروج ثم تسجيل الخول ثم اعد المحاولة"),displayDuration: Duration(milliseconds: 100));
+                                }
                         }
-
-
 
                         );
                         },

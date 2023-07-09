@@ -19,7 +19,6 @@ class Onboard extends StatefulWidget {
 class _OnboardState extends State<Onboard> {
   final onboard = PageController();
   bool isLastPage = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

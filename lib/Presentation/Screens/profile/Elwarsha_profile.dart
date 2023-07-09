@@ -129,10 +129,11 @@ class _Elwarsha_profileState extends State<Elwarsha_profile> {
                           height: myApplication.hightClc(50, context),
                         ),
                         RatingBar.builder(
+                          allowHalfRating: true,
                             itemSize: myApplication.widthClc(40, context),
                             ignoreGestures: true,
                             itemCount: 5,
-                            initialRating: 2,
+                            initialRating: 2.5,
                             itemBuilder: (context, _) =>
                                 Icon(
                                   Icons.star,

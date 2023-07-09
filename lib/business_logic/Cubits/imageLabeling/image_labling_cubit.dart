@@ -67,8 +67,6 @@ class ImageLablingCubit extends Cubit<ImageLablingState> {
         );
         confidenc = ((predictions!.first["confidence"] * 100).toInt()).toString() + "% ";
         output = predictions.first["label"];
-
-
         isprocess = true;
         emit(ImageLablingProcess());
       }

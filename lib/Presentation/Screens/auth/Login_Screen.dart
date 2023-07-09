@@ -2,7 +2,7 @@
 
 import 'package:elwarsha/Constents/fontsize.dart';
 import 'package:elwarsha/Helper/MY_SnackBar.dart';
-import 'package:elwarsha/Helper/chach_helper.dart';
+import 'package:elwarsha/Helper/cahch_helper.dart';
 import 'package:elwarsha/Presentation/Screens/Main_Screen/MainScreen.dart';
 import 'package:elwarsha/business_logic/Cubits/Login/login_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/Passwors_Obscure/pass_op_cubit.dart';
@@ -50,7 +50,6 @@ class LoginScreen extends StatelessWidget {
           title:  Text(
             'تسجيل الدخول',
             style: TextStyle(
-              color: Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: myfonts.largfont,
             ),

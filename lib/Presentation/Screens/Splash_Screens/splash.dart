@@ -34,10 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
         if (widget.signMethod == "normal" && fauth.currentUser!= null) {
           if(!fauth.currentUser!.emailVerified){
             myApplication.navigateToRemove(context,  verfyEmailPage());
-
           }else{
             myApplication.navigateToRemove(context,  MainScreen());
-
           }
         }else{
           myApplication.navigateToRemove(context, const MainScreen());
@@ -46,7 +44,6 @@ class _SplashScreenState extends State<SplashScreen> {
           // ignore: use_build_context_synchronously
           myApplication.navigateToRemove(context,  LoginScreen());
         }
-
       } else {
         myApplication.navigateToRemove(context, const Onboard());
       }

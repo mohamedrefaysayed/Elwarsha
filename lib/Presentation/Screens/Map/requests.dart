@@ -1,4 +1,6 @@
 // ignore: file_names
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elwarsha/Presentation/Screens/Map/requestProfile.dart';
 import 'package:elwarsha/business_logic/Cubits/Map/map_cubit.dart';
@@ -37,11 +39,11 @@ class requests extends StatelessWidget {
           child: BlocBuilder<RepairRequestCubit, RepairRequestState>(
             builder: (context, state) {
               return Container(
+
                 child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>( // inside the <> you enter the type of your stream
                   stream: FirebaseFirestore.instance.collection("Requests").snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
-
                       BlocProvider.of<RepairRequestCubit>(context).emit(RepairRequestInitial());
                       return snapshot.data!.docs.length != 0
                           ? ListView.builder(
@@ -50,17 +52,20 @@ class requests extends StatelessWidget {
                           itemBuilder:(context,index){
                             GeoPoint carlocation = snapshot.data!.docs[index].get("location");
 
-                            final distanceResult = distance(MapCubit.position!.latitude, MapCubit.position!.longitude, carlocation.latitude, carlocation.longitude);
+                            final distanceResult = distance(MapCubit.position!.latitude,
+                                MapCubit.position!.longitude, carlocation.latitude, carlocation.longitude);
                             final km = distanceResult.toInt().toString();
                             final m = ((distanceResult-distanceResult.toInt())*1000).toInt() .toString();
                             return  Padding(
-                              padding: EdgeInsets.symmetric(horizontal: myApplication.widthClc(20, context),vertical: myApplication.widthClc(15, context)),
+                              padding: EdgeInsets.symmetric(horizontal: myApplication.widthClc(20,
+                                  context),vertical: myApplication.widthClc(15, context)),
                               child: InkWell(
                                 onTap: (){
                                   myApplication.navigateToReplace(context, requestProfile(
                                     id: snapshot.data!.docs[index].get("id"),
                                   problem: snapshot.data!.docs[index].get("broblem"),));
                                 },
+
                                 child: Container(
                                   width: myApplication.widthClc(300, context),
                                   padding: EdgeInsetsDirectional.all(5),

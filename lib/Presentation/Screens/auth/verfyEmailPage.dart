@@ -37,18 +37,13 @@ class _verfyEmailPageState extends State<verfyEmailPage> {
   @override
   void initState() {
     super.initState();
-
     VerifyemailCubit.isEmailverified = FirebaseAuth.instance.currentUser!.emailVerified;
-
     if (!VerifyemailCubit.isEmailverified) {
       BlocProvider.of<VerifyemailCubit>(context).sendvervEmail();
-
       timer = Timer.periodic(
-
           const Duration(seconds: 3),
         (_) {
             BlocProvider.of<VerifyemailCubit>(context).checkemailvervy();
-
             if(VerifyemailCubit.isEmailverified){
               if(Role == "سائق سيارة"){
                 myApplication.navigateToRemove(context, CarInfo(isregerster: true,));

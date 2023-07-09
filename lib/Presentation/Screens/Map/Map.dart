@@ -478,6 +478,7 @@ class _MyMapState extends State<MyMap>
                     ),
 
         ),
+
         body: MapCubit.position != null
                 ? MapCubit.isConnectedToInternet!
                     ? Stack(
@@ -642,6 +643,7 @@ class _MyMapState extends State<MyMap>
                                         return requests();
                                       });
                                 },
+
                                 label: Row(
                                   children: [
                                     Text(

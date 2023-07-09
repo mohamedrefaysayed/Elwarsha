@@ -36,25 +36,19 @@ class ElwarshaInfoCubit extends Cubit<ElwarshaInfoState> {
         print('warsha data: ${value.data()}');
         Info = value.data() as Map<String, dynamic>;
       }).then((value) {
-
         warshaName = Info!["warshaName"] ?? "" ;
         warshOwnerName = Info!["warshaOwnerName"] ?? "" ;
         warshlicense = Info!["warshalicense"] ?? "";
         warshDesc = Info!["warshaDesc"] ;
         warshaLocation = Info!["warshalocation"] ?? "";
-
         BlocProvider.of<MapPickerCubit>(context).addMarker(LatLng(
             ElwarshaInfoCubit.warshaLocation!.latitude,
             ElwarshaInfoCubit.warshaLocation!.longitude));
-
         emit(ElwarshaInfoSuccess());
       });
-
-
     } on FirebaseException {
       emit(ElwarshaInfoFailuer());
     }
-
   }
 
 
@@ -69,19 +63,14 @@ class ElwarshaInfoCubit extends Cubit<ElwarshaInfoState> {
         "warshalocation": GeoPoint(warshaLocation!.latitude,warshaLocation!.longitude),
         "warshaState":false,
         "warshaKey":userKey,
-
-
       });
     } on FirebaseException {
     }
 
   }
-
   setState()async{
     await ffire.collection('Elwrash').doc(userKey).update({
-
       "warshaState":elwarshaState,
-
     });
   }
 

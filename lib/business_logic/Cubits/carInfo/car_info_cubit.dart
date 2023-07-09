@@ -28,36 +28,51 @@ class CarInfoCubit extends Cubit<CarInfoState> {
   // ignore: non_constant_identifier_names
   static String? StructType ;
 
-  static String? agency ;
+  static String? agency = "n" ;
 
   CarInfoCubit() : super(CarInfoInitial());
-  Future<void>setInfo({required  Car,required Model,required EnginCap,required EnginPow,required StructType,required agency}) async {
-    try{
-      await ffire.collection('customers').doc(userKey).collection("car").doc("data").set({
 
+  Future<void>setInfo({required  Car,
+    required Model,
+    required EnginCap,
+    required EnginPow,
+    required StructType,
+    required agency}) async {
+    try{
+      await ffire.
+      collection('customers')
+          .doc(userKey)
+          .collection("car")
+          .doc("data").set({
         "car": Car,
         "model": Model,
         "enginCap": EnginCap,
         "enginPow": EnginPow,
         "structType": StructType,
         "agency" : agency,
-
       });
     } on FirebaseException {
     }
-
   }
-  Future<void>updateInfo({required  Car,required Model,required EnginCap,required EnginPow,required StructType,required agency}) async {
-    try{
-      await ffire.collection('customers').doc(userKey).collection("car").doc("data").update({
 
+  Future<void>updateInfo({required  Car,
+    required Model,
+    required EnginCap,
+    required EnginPow,
+    required StructType,
+    required agency}) async {
+    try{
+      await ffire
+          .collection('customers')
+          .doc(userKey)
+          .collection("car")
+          .doc("data").update({
         "car": Car,
         "model": Model,
         "enginCap": EnginCap,
         "enginPow": EnginPow,
         "structType": StructType,
         "agency" : agency,
-
       });
     } on FirebaseException {
     }

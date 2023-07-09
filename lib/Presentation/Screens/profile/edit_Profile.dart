@@ -127,7 +127,7 @@ class Profile_edit extends StatelessWidget {
                                 ),
                               ),
                               onTap: () {
-                                myApplication.imageDialog(context);
+                                myApplication.imageDialog(context,"prof");
                               },
                               onLongPress: () {
                                 myApplication.zoomoutImageialog(context);

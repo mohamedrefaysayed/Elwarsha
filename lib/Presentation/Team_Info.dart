@@ -38,6 +38,7 @@ class TeamInfo extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+
       body: Container(
         padding: EdgeInsets.symmetric(
             horizontal: myApplication.widthClc(25, context),
