@@ -21,6 +21,8 @@ import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/imageLabeling/image_labling_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/map_Picker/map_picker_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/nav_bar/bottom_nav_bar_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/requests/requests_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/sany3y/sany3y_cubit.dart';
 import 'package:elwarsha/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -40,7 +42,6 @@ import 'global/global.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseMessaging.instance.requestPermission();
   final fcmToken = await FirebaseMessaging.instance.getToken();
   print("Token :$fcmToken");
   FirebaseMessaging.onBackgroundMessage((message) async{
@@ -59,6 +60,7 @@ Future main() async {
   final showHome = Prefs.getBool('showHome') ?? false;
   final signMethod = Prefs.getString('signMethod') ?? "";
   Role = Prefs.getString('role') ?? "";
+  sany3yWarsha = CahchHelper.getData(key: "sany3yWarsha") ??"";
   elwarshaState = false;
   stordimagePath = Prefs.getString("image") ?? null;
   SignedIn = CahchHelper.getData(key: "signedIn") ?? false;
@@ -99,6 +101,8 @@ class Elwarsha extends StatelessWidget {
         BlocProvider(create: (context) => CommentsCubit()),
         BlocProvider(create: (context) => AddItemCubit()),
         BlocProvider(create: (context) => ArchiveCubit()),
+        BlocProvider(create: (context) => Sany3yCubit()),
+        BlocProvider(create: (context) => RequestsCubit()),
 
       ],
       child: MaterialApp(

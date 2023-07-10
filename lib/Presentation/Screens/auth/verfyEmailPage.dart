@@ -1,9 +1,13 @@
 // ignore: file_names
 import 'dart:async';
+import 'package:elwarsha/Helper/MY_SnackBar.dart';
 import 'package:elwarsha/Presentation/Screens/Info/Elwarsha_Info.dart';
-import 'package:elwarsha/Presentation/Screens/Info/Sane3y_Data.dart';
+import 'package:elwarsha/Presentation/Screens/Info/sany3yProfile.dart';
+import 'package:elwarsha/Presentation/Screens/Main_Screen/MainScreen.dart';
 import 'package:elwarsha/business_logic/Cubits/Verfy_email/verifyemail_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/sany3y/sany3y_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../../../Constents/colors.dart';
 import '../../../../Constents/fontsize.dart';
@@ -50,7 +54,33 @@ class _verfyEmailPageState extends State<verfyEmailPage> {
               }else if(Role == "صاحب ورشة"){
                 myApplication.navigateToRemove(context, elwarshaInfo(isregerster: true,));
               }else{
-                myApplication.navigateToRemove(context, Sane3yData());
+                myApplication.Sany3ySpecialization(context, () async{
+                  if (Sany3yCubit.Specialization != null) {
+                    if (Sany3yCubit.Specialization == "اخرى") {
+                      if (Sany3yCubit.AnotherSpecialization != null) {
+                        await BlocProvider.of<Sany3yCubit>(context).SaveSpecialization();
+                        showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
+                        myApplication.navigateToRemove(
+                            context, MainScreen());
+                        Sany3yCubit.AnotherSpecialization = null;
+                        Sany3yCubit.Specialization = null;
+                      }else{
+                        showTopSnackBar(Overlay.of(context), MySnackBar.error(message: "أكتب التخصص"));
+
+                      }
+                    } else {
+                      await BlocProvider.of<Sany3yCubit>(context).SaveSpecialization();
+                      showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
+                      myApplication.navigateToRemove(
+                          context, MainScreen());
+                      Sany3yCubit.AnotherSpecialization = null;
+                      Sany3yCubit.Specialization = null;
+                    }
+                  } else {
+                    showTopSnackBar(Overlay.of(context),
+                        MySnackBar.error(message: "أختر التخصص"));
+                  }
+                });
               }
             }
           }

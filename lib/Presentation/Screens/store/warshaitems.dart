@@ -37,11 +37,11 @@ class warshaItems extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             return Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 20,vertical: 70),
                 width: double.infinity,
                 child: snapshot.data!.docs.length != 0
 
                     ? GridView.builder(
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 20,vertical: 70),
                   addAutomaticKeepAlives: true,
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,

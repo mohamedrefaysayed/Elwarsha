@@ -18,8 +18,6 @@ class AddItemCubit extends Cubit<AddItemState> {
   static File? image;
   String? url;
 
-
-
   static int? price ;
   static int? fixePrice ;
   static String? name ;

@@ -2,11 +2,13 @@ import 'package:elwarsha/Constents/fontsize.dart';
 import 'package:elwarsha/Helper/MY_SnackBar.dart';
 import 'package:elwarsha/Presentation/Screens/Info/Car_Info.dart';
 import 'package:elwarsha/Presentation/Screens/Info/Elwarsha_Info.dart';
-import 'package:elwarsha/Presentation/Screens/Info/Sane3y_Data.dart';
+import 'package:elwarsha/Presentation/Screens/Info/sany3yProfile.dart';
+import 'package:elwarsha/Presentation/Screens/Main_Screen/MainScreen.dart';
 import 'package:elwarsha/Presentation/Screens/auth/Login_Screen.dart';
 import 'package:elwarsha/Presentation/Screens/auth/verfyEmailPage.dart';
 import 'package:elwarsha/business_logic/Cubits/Passwors_Obscure/pass_op_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/Register/register_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/sany3y/sany3y_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -76,14 +78,41 @@ class RegisterScreen extends StatelessWidget {
               if (state is RegisterLoading) {
                 load = true;
               } else if (state is RegisterSuccess) {
-                showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
                 if(customreg){
                   if(RoleCubit.role == "سائق سيارة"){
+                    showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
                     myApplication.navigateToRemove(context, CarInfo(isregerster: true,));
                   }else if(RoleCubit.role == "صاحب ورشة"){
-                      myApplication.navigateToRemove(context, elwarshaInfo(isregerster: true,));
+                    showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
+                    myApplication.navigateToRemove(context, elwarshaInfo(isregerster: true,));
                     }else{
-                    myApplication.navigateToRemove(context, Sane3yData());
+                    myApplication.Sany3ySpecialization(context, () async{
+                      if (Sany3yCubit.Specialization != null) {
+                        if (Sany3yCubit.Specialization == "اخرى") {
+                          if (Sany3yCubit.AnotherSpecialization != null) {
+                            await BlocProvider.of<Sany3yCubit>(context).SaveSpecialization();
+                            showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
+                            myApplication.navigateToRemove(
+                                context, MainScreen());
+                            Sany3yCubit.AnotherSpecialization = null;
+                            Sany3yCubit.Specialization = null;
+                          }else{
+                            showTopSnackBar(Overlay.of(context), MySnackBar.error(message: "أكتب التخصص"));
+
+                          }
+                        } else {
+                          await BlocProvider.of<Sany3yCubit>(context).SaveSpecialization();
+                          showTopSnackBar(Overlay.of(context), MySnackBar.success(message: "تم إنشاء الحساب بنجاح",));
+                          myApplication.navigateToRemove(
+                              context, MainScreen());
+                          Sany3yCubit.AnotherSpecialization = null;
+                          Sany3yCubit.Specialization = null;
+                        }
+                      } else {
+                        showTopSnackBar(Overlay.of(context),
+                            MySnackBar.error(message: "أختر التخصص"));
+                      }
+                    });
                   }
 
                 }else{

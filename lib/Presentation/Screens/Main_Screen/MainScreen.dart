@@ -1,8 +1,11 @@
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:elwarsha/Helper/MyApplication.dart';
+import 'package:elwarsha/Helper/cahch_helper.dart';
+import 'package:elwarsha/Presentation/Screens/Info/sany3yaTeam.dart';
 import 'package:elwarsha/Presentation/Screens/archive/archive.dart';
 import 'package:elwarsha/Presentation/Screens/fav/fav.dart';
+import 'package:elwarsha/Presentation/Screens/profile/Elwarsha_profile.dart';
 import 'package:elwarsha/Presentation/Screens/store/spareMain.dart';
 import 'package:elwarsha/Presentation/Screens/store/warshaitems.dart';
 import 'package:elwarsha/business_logic/Cubits/elwarsha_Info/elwarsha_info_cubit.dart';
@@ -28,8 +31,10 @@ class _MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
-    BottomNavBarCubit.selectedIndex = 2;
-    BottomNavBarCubit.tabController = TabController(length: 5, vsync: this,initialIndex: 2);
+    BottomNavBarCubit.selectedIndex = 1;
+    Role == "صنيعي"
+        ? BottomNavBarCubit.tabController = TabController(length: 3, vsync: this,initialIndex: 1)
+        : BottomNavBarCubit.tabController = TabController(length: 5, vsync: this,initialIndex: 2);
     Role == "صاحب ورشة"
         ? BlocProvider.of<ElwarshaInfoCubit>(context).getInfo(context, userKey)
         : null;
@@ -54,15 +59,24 @@ class _MainScreenState extends State<MainScreen>
             const person_file(),
           ],
         )
-            : TabBarView(
+            : Role == "صاحب ورشة" ? TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           controller: BottomNavBarCubit.tabController,
           children: [
             warshaItems(),
             archive(),
             MyMap(),
-            Fav(),
+            sany3yaTeam(),
             const person_file(),
+          ],
+        )
+            : TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: BottomNavBarCubit.tabController,
+          children: [
+            warshaItems(),
+            MyMap(),
+            person_file(),
           ],
         ),
       ),
@@ -114,7 +128,7 @@ class _MainScreenState extends State<MainScreen>
             buttonBackgroundColor: mycolors.popColor,
             onTap: BlocProvider.of<BottomNavBarCubit>(context).onItemclicked,
           )
-              : CurvedNavigationBar(
+              : Role == "صاحب ورشة" ? CurvedNavigationBar(
             animationCurve: Curves.ease,
             animationDuration: const Duration(milliseconds: 500),
             index: BottomNavBarCubit.selectedIndex,
@@ -146,6 +160,39 @@ class _MainScreenState extends State<MainScreen>
                     color: mycolors.secod_color,
                   ),
                   label: "الطاقم",
+                  labelStyle: TextStyle(color: mycolors.secod_color)),
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.person,
+                    color: mycolors.secod_color,
+                  ),
+                  label: "صفحتى",
+                  labelStyle: TextStyle(color: mycolors.secod_color)),
+            ],
+
+            color: mycolors.popColor,
+            backgroundColor: Colors.transparent,
+            buttonBackgroundColor: mycolors.popColor,
+            onTap: BlocProvider.of<BottomNavBarCubit>(context).onItemclicked,
+          )
+              :  CurvedNavigationBar(
+            animationCurve: Curves.ease,
+            animationDuration: const Duration(milliseconds: 500),
+            index: BottomNavBarCubit.selectedIndex,
+            items: [
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.shopping_cart,
+                    color: mycolors.secod_color,
+                  ),
+                  label: "متجرى",
+                  labelStyle: TextStyle(color: mycolors.secod_color)),
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.map,
+                    color: mycolors.secod_color,
+                  ),
+                  label: "الخريطة",
                   labelStyle: TextStyle(color: mycolors.secod_color)),
               CurvedNavigationBarItem(
                   child: Icon(

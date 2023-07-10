@@ -33,6 +33,7 @@ class RegisterCubit extends Cubit<RegisterState> {
           "pass":password,
           "role":RoleCubit.role,
           "alignment": Alignment,
+
         });
       });
 

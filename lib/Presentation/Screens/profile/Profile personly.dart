@@ -3,11 +3,16 @@ import 'dart:io';
 import 'package:elwarsha/Helper/cahch_helper.dart';
 import 'package:elwarsha/Presentation/Screens/Info/Elwarsha_Info.dart';
 import 'package:elwarsha/Presentation/Screens/Splash_Screens/splash.dart';
+import 'package:elwarsha/Presentation/Screens/profile/Elwarsha_profile.dart';
 import 'package:elwarsha/Presentation/Screens/profile/edit_Profile.dart';
+import 'package:elwarsha/Presentation/Screens/requests/showRequests.dart';
 import 'package:elwarsha/business_logic/Cubits/Notification_Button/notify_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../../Constents/colors.dart';
 import '../../../../Constents/fontsize.dart';
@@ -40,6 +45,7 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: mycolors.first_color,
         appBar: AppBar(
@@ -137,12 +143,6 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                                               ),
                                             )
                                             : Icon(Icons.person,color: mycolors.secod_color,size: myApplication.widthClc(100, context),))
-
-
-
-
-
-
                                         ),
                                         )),
                                   ),
@@ -182,37 +182,100 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                     horizontal: myApplication.widthClc(40, context)),
                 child: Column(
                   children: [
-                    InkWell(
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                    Role == "صنيعي" 
+                        ? Column(
                           children: [
-                            Text(
-                                Role == "سائق سيارة" ? "سيارتي" : "الورشة",
-                                style: TextStyle(
-                                    color: mycolors.fontColor,
-                                    fontSize: myfonts.smallfont)),
+                            InkWell(
+                            onTap: () {
+                              myApplication.push_up(context, Elwarsha_profile( warshaKey: GetInfoCubit.Info!["warshaId"],));
+                            },
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text("ورشتى",
+                                      style: TextStyle(
+                                          color: mycolors.fontColor,
+                                          fontSize: myfonts.smallfont)),
+                                  SizedBox(
+                                    width: myApplication.widthClc(50, context),
+                                  ),
+                                  Icon(FontAwesomeIcons.gears,
+                                      color: mycolors.secod_color,
+                                      size: myApplication.widthClc(25, context),
+                                  )
+                                  // Icon(Icons.edit, color: mycolors.secod_color,size: myApplication.widthClc(25, context)),
+                                ])),
                             SizedBox(
-                              width: myApplication.widthClc(50, context),
+                              height: myApplication.hightClc(25, context),
                             ),
-                            Icon(
-                              Role == "سائق سيارة" ?  myicons.directions_car : Icons.home_work_sharp,
+                          ],
+                        )
+                    : Container(),
+                    Role != "صنيعي" ? Column(
+                      children: [
+                        InkWell(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                    Role == "سائق سيارة" ? "سيارتي" : "الورشة",
+                                    style: TextStyle(
+                                        color: mycolors.fontColor,
+                                        fontSize: myfonts.smallfont)),
+                                SizedBox(
+                                  width: myApplication.widthClc(50, context),
+                                ),
+                                Icon(
+                                  Role == "سائق سيارة" ?  myicons.directions_car : Icons.home_work_sharp,
 
-                              color: mycolors.secod_color,
-                              size: myApplication.widthClc(25, context),
-                            )
-                          ]),
-                      onTap: () {
-                        myApplication.myConfirmationdialog(
-                            context,
-                            Role == "سائق سيارة" ? "هل تريد تغيير بيانات سياراتك ؟" : "هل تريد تغيير بيانات ورشتك ؟",
-                            () => Role == "سائق سيارة" ? myApplication.push_up(context,CarInfo(isregerster: false,))
-                                : myApplication.push_up(context, elwarshaInfo(isregerster: false,)),
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: myApplication.hightClc(25, context),
-                    ),
+                                  color: mycolors.secod_color,
+                                  size: myApplication.widthClc(25, context),
+                                )
+                              ]),
+                          onTap: () {
+                            myApplication.myConfirmationdialog(
+                                context,
+                                Role == "سائق سيارة" ? "هل تريد تغيير بيانات سياراتك ؟" : "هل تريد تغيير بيانات ورشتك ؟",
+                                () => Role == "سائق سيارة" ? myApplication.push_up(context,CarInfo(isregerster: false,))
+                                    : myApplication.push_up(context, elwarshaInfo(isregerster: false,)),
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: myApplication.hightClc(25, context),
+                        ),
+                      ],
+                    )
+                    : Container(),
+                    Role == "صاحب ورشة"
+                        ? Column(
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              myApplication.push_up(context, showRequests());
+                            },
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text("طلبات الأنضمام",
+                                      style: TextStyle(
+                                          color: mycolors.fontColor,
+                                          fontSize: myfonts.smallfont)),
+                                  SizedBox(
+                                    width: myApplication.widthClc(50, context),
+                                  ),
+                                  Icon(Icons.person_pin_circle_outlined,
+                                    color: mycolors.secod_color,
+                                    size: myApplication.widthClc(30, context),
+                                  )
+                                  // Icon(Icons.edit, color: mycolors.secod_color,size: myApplication.widthClc(25, context)),
+                                ])),
+                        SizedBox(
+                          height: myApplication.hightClc(25, context),
+                        ),
+                      ],
+                    )
+                        : Container(),
                     Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                       BlocBuilder<NotifyCubit, NotifyState>(
                         builder: (context, state) {
@@ -251,25 +314,6 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                         size: myApplication.widthClc(25, context),
                       ),
                     ]),
-                    SizedBox(
-                      height: myApplication.hightClc(25, context),
-                    ),
-                    InkWell(
-                        onTap: () {},
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text("سجل الطلبات",
-                                  style: TextStyle(
-                                      color: mycolors.fontColor,
-                                      fontSize: myfonts.smallfont)),
-                              SizedBox(
-                                width: myApplication.widthClc(50, context),
-                              ),
-                              Icon(Icons.watch_later,
-                                  color: mycolors.secod_color,
-                                  size: myApplication.widthClc(25, context)),
-                            ])),
                     SizedBox(
                       height: myApplication.hightClc(25, context),
                     ),
@@ -318,10 +362,12 @@ class _person_fileState extends State<person_file> with AutomaticKeepAliveClient
                       height: myApplication.hightClc(25, context),
                     ),
                     InkWell(
-                        onTap: () {
+                        onTap: () async{
 
                           if(fauth.currentUser!=null){
-                            fauth.signOut();
+                            await fauth.signOut();
+                            await FacebookAuth.instance.logOut();
+                            await GoogleSignIn().signOut();
                           }
                           myApplication
                               .myConfirmationdialog(context, "هل تريد تسجيل الخروج ؟", () {

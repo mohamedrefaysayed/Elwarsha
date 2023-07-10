@@ -237,7 +237,7 @@ class more_details extends StatelessWidget {
                   ? GestureDetector(
                       onTap: () {
                         myApplication.navigateTo(
-                            Elwarsha_profile(product.warshaId), context);
+                            Elwarsha_profile( warshaKey: product.warshaId, ), context);
                       },
                       child: Text(
                         "تابع لورشة ${product.warshaName.toString()}",

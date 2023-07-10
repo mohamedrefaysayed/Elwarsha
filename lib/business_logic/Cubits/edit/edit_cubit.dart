@@ -86,27 +86,5 @@ class EditCubit extends Cubit<EditState> {
     emit(EditInitial());
   }
 
-  // setAlign(details){
-  //   picAlignment += Alignment(details.delta.dx / 200, details.delta.dy / 200);
-  //   emit(EditInitial());
-  // }
-  // void saveAlignmentToFirebase(Alignment alignment) {
-  //   String alignmentString = alignmentToString(alignment);
-  //   FirebaseFirestore.instance.collection('customers').doc(userKey).update({
-  //     'alignment': alignmentString,
-  //   });
-  // }
-  //
-  // Future getAlignmentFromFirebase() async {
-  //   if(GetInfoCubit.Info!["alignment"]!="orginal") {
-  //     String? alignmentString = GetInfoCubit.Info!["alignment"];
-  //     List<String> parts = alignmentString!.split(',');
-  //     double x = double.parse(parts[0]);
-  //     double y = double.parse(parts[1]);
-  //     EditCubit.picAlignment = Alignment(x, y);
-  //   }
-  // }
-
-
 
 }

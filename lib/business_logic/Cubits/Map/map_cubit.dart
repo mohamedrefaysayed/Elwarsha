@@ -124,7 +124,7 @@ MapCubit() : super(MapInitial());
                      coordinate.longitude,MapCubit.position!.latitude,MapCubit.position!.longitude,
                          (){
                        Navigator.pop(context);
-                       myApplication.navigateTo(Elwarsha_profile(element["warshaKey"]), context);
+                       myApplication.navigateTo(Elwarsha_profile( warshaKey: element["warshaKey"],), context);
                      }
                  );
                },
@@ -134,7 +134,6 @@ MapCubit() : super(MapInitial());
          });
 
        });
-
 
     //    for (LatLng coordinate in WorkShopsCoordinates) {
     //     final Uint8List markerIcon = await getBytesFromAsset(

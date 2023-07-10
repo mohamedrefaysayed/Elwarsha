@@ -17,15 +17,24 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,47 +52,11 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCUD_LoX1slw7KMcbn3AgGazMUxRMNXh3o',
-    appId: '1:284481971558:web:3b42b399796c86368194a7',
-    messagingSenderId: '284481971558',
-    projectId: 'elwarsha-ff004',
-    authDomain: 'elwarsha-ff004.firebaseapp.com',
-    databaseURL: 'https://elwarsha-ff004-default-rtdb.firebaseio.com',
-    storageBucket: 'elwarsha-ff004.appspot.com',
-    measurementId: 'G-GTCN4TQ93S',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCUD_LoX1slw7KMcbn3AgGazMUxRMNXh3o',
-    appId: '1:284481971558:android:baf6394126a2c4da8194a7',
-    messagingSenderId: '284481971558',
-    projectId: 'elwarsha-ff004',
-    databaseURL: 'https://elwarsha-ff004-default-rtdb.firebaseio.com',
-    storageBucket: 'elwarsha-ff004.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDWRRmFz3GnbJmN7gLMJTbwOti3pKqjHjA',
-    appId: '1:284481971558:ios:7e28b6ca44509cbf8194a7',
-    messagingSenderId: '284481971558',
-    projectId: 'elwarsha-ff004',
-    databaseURL: 'https://elwarsha-ff004-default-rtdb.firebaseio.com',
-    storageBucket: 'elwarsha-ff004.appspot.com',
-    androidClientId: '284481971558-re6kkqn2e7uscn2p5ap4earq08kp4m6j.apps.googleusercontent.com',
-    iosClientId: '284481971558-9ar7b0mtik9acu62gi3f3kogqj0m10do.apps.googleusercontent.com',
-    iosBundleId: 'com.example.elwarsha',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDWRRmFz3GnbJmN7gLMJTbwOti3pKqjHjA',
-    appId: '1:284481971558:ios:7e28b6ca44509cbf8194a7',
-    messagingSenderId: '284481971558',
-    projectId: 'elwarsha-ff004',
-    databaseURL: 'https://elwarsha-ff004-default-rtdb.firebaseio.com',
-    storageBucket: 'elwarsha-ff004.appspot.com',
-    androidClientId: '284481971558-re6kkqn2e7uscn2p5ap4earq08kp4m6j.apps.googleusercontent.com',
-    iosClientId: '284481971558-9ar7b0mtik9acu62gi3f3kogqj0m10do.apps.googleusercontent.com',
-    iosBundleId: 'com.example.elwarsha',
+    apiKey: 'AIzaSyCakykxwrhwTFl0SJO8R17BycUJMr6yWCI',
+    appId: '1:1004110685795:android:852b6318f056e48d98fa56',
+    messagingSenderId: '1004110685795',
+    projectId: 'wlearsha2',
+    storageBucket: 'wlearsha2.appspot.com',
   );
 }

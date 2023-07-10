@@ -407,7 +407,7 @@ class _MyMapState extends State<MyMap>
                                         myApplication.markerDialog(context,coordinate.latitude,coordinate.longitude,MapCubit.position!.latitude,MapCubit.position!.longitude,
                                                 (){
                                           Navigator.pop(context);
-                                              myApplication.navigateTo(Elwarsha_profile(element["warshaKey"]), context);
+                                              myApplication.navigateTo(Elwarsha_profile( warshaKey: element["warshaKey"]), context);
                                             }
                                         );
                                       },
@@ -452,7 +452,7 @@ class _MyMapState extends State<MyMap>
                                     onPressed: () {
                                       elwarshaState = !elwarshaState!;
                                       BlocProvider.of<ElwarshaInfoCubit>(context).setState();
-                                      if(elwarshaState!) {
+                                      if(ElwarshaInfoCubit.Info![""]) {
                                         showTopSnackBar(
                                             Overlay.of(context),
                                             MySnackBar.success(

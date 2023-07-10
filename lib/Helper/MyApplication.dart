@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, empty_catches, non_constant_identifier_names, depend_on_referenced_packages
+// ignore_for_file: file_names, empty_catches, non_constant_identifier_names, depend_on_referenced_packages, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -11,6 +11,7 @@ import 'package:elwarsha/business_logic/Cubits/addItem/add_item_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/carInfo/car_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/getInfo/get_info_cubit.dart';
 import 'package:elwarsha/business_logic/Cubits/role/role_cubit.dart';
+import 'package:elwarsha/business_logic/Cubits/sany3y/sany3y_cubit.dart';
 import 'package:elwarsha/global/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -508,6 +509,61 @@ class myApplication {
   }
 
 
+  static sany3yComentdialog(context, sany3yKey) {
+
+    String? comment;
+
+    AwesomeDialog(
+      padding: const EdgeInsets.all(30),
+      dialogType: DialogType.noHeader,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+
+          Text("اضف تعليقا",style: TextStyle(color: Colors.white,fontSize: myfonts.mediumfont),),
+          const SizedBox(height: 30,),
+          TextFormField(
+            maxLines: null,
+            textAlign: TextAlign.end,
+            style: const TextStyle(color: Colors.white),
+            onChanged: (val) {
+              comment = val;
+            },
+            strutStyle: StrutStyle.disabled,
+            decoration: InputDecoration(
+            ),
+          ),
+          const SizedBox(height: 30,),
+        ],
+      ),
+      btnOkOnPress: () async{
+        showTopSnackBar(
+            Overlay.of(context), MySnackBar.success(message: "تم الحفظ"));
+        myApplication.keyboardFocus(context);
+        await ffire.collection("customers").doc(sany3yKey).collection("coments").doc(DateTime.now().toString()).set(
+            {
+              "name" : GetInfoCubit.Info!["name"],
+              "url" : GetInfoCubit.Info!["url"],
+              "comment" : comment,
+
+            }
+        );
+        print("added!");
+
+
+
+      },
+      btnOkColor: mycolors.secod_color,
+      btnOkText: "حفظ",
+      btnCancelText: "الغاء",
+      btnCancelColor: mycolors.first_color,
+      btnCancelOnPress: (){},
+      dialogBackgroundColor: mycolors.popColor,
+      context: context,
+    ).show();
+  }
+
+
   static confirmPassword(context, title, passowrd) {
     String? userpass;
     AwesomeDialog(
@@ -832,6 +888,122 @@ class myApplication {
       context: context,
     ).show();
   }
+
+  static Sany3ySpecialization(context,onpressed) {
+    const List<String> Specialization = <String>["أخصائى عفشة", 'أخصائى كهربائى', 'أخصائى كاوتش', 'أخصائى ميكانيكا', 'متتعدد التخصصات',"اخرى"];
+
+    AwesomeDialog(
+      width: myApplication.widthClc(400, context),
+      dialogType: DialogType.noHeader,
+      dialogBackgroundColor: mycolors.popColor,
+      body: BlocBuilder<Sany3yCubit, Sany3yState>(
+        builder: (context, state) {
+          return               Container(
+            margin:  EdgeInsets.symmetric(horizontal: myApplication.widthClc(24, context)),
+            child: Column(
+              children: [
+                const Text(
+                  'التخصص',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: myApplication.hightClc(30, context),
+                ),
+                SizedBox(
+                  width: myApplication.widthClc(200, context),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    dropdownColor: mycolors.popColor,
+                    alignment: Alignment.centerRight,
+                    menuMaxHeight: myApplication.hightClc(300, context),
+                    value: Sany3yCubit.Specialization,
+                    iconSize: myApplication.widthClc(25, context),
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: mycolors.secod_color,
+                    ),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                    elevation: 16,
+                    underline: Container(
+                      height: 2,
+                      color: Colors.white,
+                    ),
+                    onChanged: (String? value) {
+                      Sany3yCubit.Specialization = value;
+                      BlocProvider.of<Sany3yCubit>(context).emit(Sany3yInitial());
+                    },
+                    items: Specialization.map<DropdownMenuItem<String>>(
+                            (String value) {
+                          return DropdownMenuItem<String>(
+                            alignment: Alignment.center,
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                  ),
+                ),
+                SizedBox(
+                  height: myApplication.hightClc(30, context),
+                ),
+                Sany3yCubit.Specialization == "اخرى"
+                    ? Row(
+                  children: [
+                    Flexible(
+                      child: TextFormField(
+                        onChanged: (val) {
+                          Sany3yCubit.AnotherSpecialization = val;
+                        },
+                        keyboardType:
+                        TextInputType.number,
+                        textAlign: TextAlign.end,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return '! أدخل التخصص';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          contentPadding:
+                          const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius:
+                            BorderRadius.circular(10.0),
+                          ),
+                          focusedBorder:
+                          const OutlineInputBorder(),
+                          hintText: 'أدخل التخصص',
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+                    : Container(),
+                SizedBox(
+                  height: myApplication.hightClc(50, context),
+                ),
+              ],
+            ),
+          );
+
+        },
+      ),
+      btnOkOnPress: onpressed,
+      btnOkText: "متابعة",
+      btnOkColor: mycolors.secod_color,
+      context: context,
+    ).show();
+  }
+
 
   static Future<bool> onWillPop(BuildContext context) {
     DateTime now = DateTime.now();
